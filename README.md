@@ -1,7 +1,8 @@
 # rust-loops
 
-`rust-loops` is a planned high-performance Rust laboratory for cellular
-automata, Artificial Life, and local persistent computation.
+`rust-loops` is a Rust laboratory for cellular automata, Artificial Life, and
+local persistent computation. Its first executable artifact is a deliberately
+small canonical Langton-loop calibration engine.
 
 The long-term research question is whether artificial substrates built from
 cheap local interactions can support learning or evolution that discovers
@@ -9,8 +10,8 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository is currently in its documentation and verification-design
-phase. No simulator has been implemented yet.
+The repository is in its canonical-correctness phase. It is not yet a general
+CA framework, a viewer, a performance claim, or a learning/evolution system.
 
 ## Intended First Milestone
 
@@ -47,22 +48,40 @@ The direct research lineage includes:
 See [Concepts](docs/concepts.md), [Loop family](docs/loop-family.md),
 [Reference model](docs/reference-model.md), and [References](docs/references.md).
 
+## Run The Canonical Engine
+
+```sh
+cargo run -- --generations 151
+cargo test
+```
+
+The command emits a normalized active-cell snapshot with population, bounds,
+generation, and a SHA-256 state-set hash. The integration suite compares
+generations `0`, `1`, `25`, `75`, and `151` exactly against fixtures generated
+by Golly 3.3's headless `bgolly` RuleLoader executor. The reference fixtures
+are normalized state data, not raw Golly assets.
+
+The first reference result is 171 non-quiescent cells in a `26×15` active
+bounds box at generation 151. This is consistent with Langton's published
+first-reproduction timing; it is not a claim about intelligence or evolution.
+
 ## Current Status
 
-- Repository and research scope established.
-- Canonical specifications and verification targets documented.
-- Efficient-intelligence hypothesis and staged experiment program documented
-  privately in the research control plane.
-- Rust workspace, rule data, simulator, and UI not yet implemented.
-- Reference artifact licensing and attribution review still open.
+- GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
+  canonical rule/seed fixtures, and Golly differential tests are present.
+- The canonical generation-151 reference trajectory is independently frozen
+  and checked in the private research archive.
+- UI, sparse/GPU execution, parallelism, performance benchmarking, and other
+  rule families remain intentionally deferred.
 
-## Licensing Status
+## Licensing And Provenance
 
-No project license has been selected yet. The absence of a license does not
-grant permission to copy, modify, or redistribute the repository's contents.
+The project is GPL-3.0-or-later. See [NOTICE.md](NOTICE.md) and
+[data/README.md](data/README.md) for the source chain and boundary around the
+normalized fixture data.
 
-External papers, rule tables, patterns, and images retain their respective
-rights. No third-party rule or pattern data has been imported at this stage.
+External papers, raw Golly rule tables/patterns, package bytes, and images are
+not redistributed by this repository.
 
 ## Epistemic Position
 

@@ -32,6 +32,19 @@ The implementation will need to prove:
 
 Final visual resemblance alone is not sufficient evidence.
 
+## Implemented Calibration Boundary
+
+The initial engine has one explicit boundary policy: a fixed finite grid with
+quiescent cells outside the grid. The canonical runner uses a padded `128×128`
+world and places the `15×10` seed at `(32, 32)`. Result snapshots normalize
+their active bounding box to `(0, 0)` so they can be compared with the Golly
+reference format without exposing an arbitrary simulation-world offset.
+
+The public oracle fixtures cover generations `0`, `1`, `25`, `75`, and `151`.
+They were independently executed by pinned Golly 3.3 `bgolly` with RuleLoader;
+Rust does not generate its expected states. A generation-302 continuation
+fixture is retained privately for the next calibration extension.
+
 ## Experiment Metadata
 
 Saved results should identify engine version, rule and seed hashes, dimensions,
