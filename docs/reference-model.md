@@ -45,6 +45,15 @@ They were independently executed by pinned Golly 3.3 `bgolly` with RuleLoader;
 Rust does not generate its expected states. A generation-302 continuation
 fixture is retained privately for the next calibration extension.
 
+## Representation-Economics Boundary
+
+The first performance experiment compares only two exact finite-world,
+single-threaded CPU representations: reusable double-buffered dense storage and
+a sparse frontier that evaluates every active cell plus its von Neumann
+neighbors. Both must yield the same normalized state snapshot for a declared
+run. Benchmark records distinguish total evaluated cells from active-cell
+updates and do not treat reduced logical work as an energy result.
+
 ## Experiment Metadata
 
 Saved results should identify engine version, rule and seed hashes, dimensions,

@@ -1,6 +1,6 @@
 //! Deterministic, bounded calibration engine for canonical Langton loops.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -65,11 +65,21 @@ impl Neighborhood {
             west: self.south,
         }
     }
+
+    fn lookup_index(self) -> usize {
+        ((((usize::from(self.center.value()) * 8 + usize::from(self.north.value())) * 8
+            + usize::from(self.east.value()))
+            * 8
+            + usize::from(self.south.value()))
+            * 8)
+            + usize::from(self.west.value())
+    }
 }
 
 #[derive(Clone, Debug)]
 pub struct LangtonRule {
-    expanded: BTreeMap<Neighborhood, State>,
+    lookup: Box<[State]>,
+    expanded_transition_count: usize,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -165,18 +175,22 @@ impl LangtonRule {
                 rotated = rotated.clockwise();
             }
         }
-        Ok(Self { expanded })
+        let mut lookup = vec![State::QUIESCENT; 8usize.pow(5)];
+        for (neighborhood, next) in &expanded {
+            lookup[neighborhood.lookup_index()] = *next;
+        }
+        Ok(Self {
+            lookup: lookup.into_boxed_slice(),
+            expanded_transition_count: expanded.len(),
+        })
     }
 
     pub fn next_state(&self, neighborhood: Neighborhood) -> State {
-        self.expanded
-            .get(&neighborhood)
-            .copied()
-            .unwrap_or(State::QUIESCENT)
+        self.lookup[neighborhood.lookup_index()]
     }
 
     pub fn expanded_transition_count(&self) -> usize {
-        self.expanded.len()
+        self.expanded_transition_count
     }
 }
 
@@ -185,6 +199,20 @@ pub struct DenseGrid {
     width: usize,
     height: usize,
     cells: Vec<State>,
+}
+
+/// Exact synchronous runner that owns two reusable dense buffers.
+#[derive(Clone, Debug)]
+pub struct DenseRunner {
+    current: DenseGrid,
+    next: DenseGrid,
+    active_cell_count: usize,
+}
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct StepStats {
+    pub active_cells_before_step: usize,
+    pub cell_evaluations: usize,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -236,36 +264,199 @@ impl DenseGrid {
         self.cells[index] = state;
         Ok(())
     }
-    fn at_or_quiescent(&self, x: isize, y: isize) -> State {
-        if x < 0 || y < 0 {
-            return State::QUIESCENT;
-        }
-        self.get(x as usize, y as usize).unwrap_or(State::QUIESCENT)
-    }
     pub fn step(&self, rule: &LangtonRule) -> Self {
-        let mut next = Self::new(self.width, self.height).expect("existing dimensions are valid");
-        for y in 0..self.height {
-            for x in 0..self.width {
-                let x = x as isize;
-                let y = y as isize;
-                let neighborhood = Neighborhood {
-                    center: self.at_or_quiescent(x, y),
-                    north: self.at_or_quiescent(x, y - 1),
-                    east: self.at_or_quiescent(x + 1, y),
-                    south: self.at_or_quiescent(x, y + 1),
-                    west: self.at_or_quiescent(x - 1, y),
+        let mut runner = DenseRunner::new(self.clone());
+        runner.step(rule);
+        runner.into_grid()
+    }
+    pub fn run(&self, rule: &LangtonRule, generations: u64) -> Self {
+        let mut runner = DenseRunner::new(self.clone());
+        for _ in 0..generations {
+            runner.step(rule);
+        }
+        runner.into_grid()
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.cells
+            .iter()
+            .filter(|state| **state != State::QUIESCENT)
+            .count()
+    }
+}
+
+impl DenseRunner {
+    pub fn new(current: DenseGrid) -> Self {
+        let active_cell_count = current.active_cell_count();
+        let next =
+            DenseGrid::new(current.width, current.height).expect("existing dimensions are valid");
+        Self {
+            current,
+            next,
+            active_cell_count,
+        }
+    }
+
+    pub fn step(&mut self, rule: &LangtonRule) -> StepStats {
+        let mut next_active = 0usize;
+        for y in 0..self.current.height {
+            let row = y * self.current.width;
+            for x in 0..self.current.width {
+                let index = row + x;
+                let north = if y == 0 {
+                    State::QUIESCENT
+                } else {
+                    self.current.cells[index - self.current.width]
                 };
-                next.cells[(y as usize) * self.width + x as usize] = rule.next_state(neighborhood);
+                let east = if x + 1 == self.current.width {
+                    State::QUIESCENT
+                } else {
+                    self.current.cells[index + 1]
+                };
+                let south = if y + 1 == self.current.height {
+                    State::QUIESCENT
+                } else {
+                    self.current.cells[index + self.current.width]
+                };
+                let west = if x == 0 {
+                    State::QUIESCENT
+                } else {
+                    self.current.cells[index - 1]
+                };
+                let next = rule.next_state(Neighborhood {
+                    center: self.current.cells[index],
+                    north,
+                    east,
+                    south,
+                    west,
+                });
+                next_active += usize::from(next != State::QUIESCENT);
+                self.next.cells[index] = next;
             }
         }
-        next
+        std::mem::swap(&mut self.current, &mut self.next);
+        let stats = StepStats {
+            active_cells_before_step: self.active_cell_count,
+            cell_evaluations: self.current.cells.len(),
+        };
+        self.active_cell_count = next_active;
+        stats
     }
+
+    pub fn grid(&self) -> &DenseGrid {
+        &self.current
+    }
+    pub fn into_grid(self) -> DenseGrid {
+        self.current
+    }
+}
+
+/// Exact sparse-frontier representation for a finite quiescent world.
+/// Every active cell and its von Neumann neighbors is evaluated each generation;
+/// all remaining neighborhoods are quiescent and therefore remain quiescent.
+#[derive(Clone, Debug)]
+pub struct SparseFrontierGrid {
+    width: usize,
+    height: usize,
+    cells: BTreeMap<usize, State>,
+}
+
+impl SparseFrontierGrid {
+    pub fn from_dense(grid: &DenseGrid) -> Self {
+        let cells = grid
+            .cells
+            .iter()
+            .enumerate()
+            .filter_map(|(index, state)| (*state != State::QUIESCENT).then_some((index, *state)))
+            .collect();
+        Self {
+            width: grid.width,
+            height: grid.height,
+            cells,
+        }
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.cells.len()
+    }
+
+    fn at_or_quiescent(&self, x: isize, y: isize) -> State {
+        if x < 0 || y < 0 || x as usize >= self.width || y as usize >= self.height {
+            return State::QUIESCENT;
+        }
+        self.cells
+            .get(&(y as usize * self.width + x as usize))
+            .copied()
+            .unwrap_or(State::QUIESCENT)
+    }
+
+    fn candidates(&self) -> BTreeSet<usize> {
+        let mut candidates = BTreeSet::new();
+        for index in self.cells.keys().copied() {
+            let x = index % self.width;
+            let y = index / self.width;
+            candidates.insert(index);
+            if x > 0 {
+                candidates.insert(index - 1);
+            }
+            if x + 1 < self.width {
+                candidates.insert(index + 1);
+            }
+            if y > 0 {
+                candidates.insert(index - self.width);
+            }
+            if y + 1 < self.height {
+                candidates.insert(index + self.width);
+            }
+        }
+        candidates
+    }
+
+    pub fn step(&self, rule: &LangtonRule) -> (Self, StepStats) {
+        let candidates = self.candidates();
+        let mut cells = BTreeMap::new();
+        for index in &candidates {
+            let x = index % self.width;
+            let y = index / self.width;
+            let next = rule.next_state(Neighborhood {
+                center: self.at_or_quiescent(x as isize, y as isize),
+                north: self.at_or_quiescent(x as isize, y as isize - 1),
+                east: self.at_or_quiescent(x as isize + 1, y as isize),
+                south: self.at_or_quiescent(x as isize, y as isize + 1),
+                west: self.at_or_quiescent(x as isize - 1, y as isize),
+            });
+            if next != State::QUIESCENT {
+                cells.insert(*index, next);
+            }
+        }
+        (
+            Self {
+                width: self.width,
+                height: self.height,
+                cells,
+            },
+            StepStats {
+                active_cells_before_step: self.cells.len(),
+                cell_evaluations: candidates.len(),
+            },
+        )
+    }
+
     pub fn run(&self, rule: &LangtonRule, generations: u64) -> Self {
         let mut current = self.clone();
         for _ in 0..generations {
-            current = current.step(rule);
+            current = current.step(rule).0;
         }
         current
+    }
+
+    pub fn to_dense(&self) -> DenseGrid {
+        let mut grid =
+            DenseGrid::new(self.width, self.height).expect("stored dimensions are valid");
+        for (index, state) in &self.cells {
+            grid.cells[*index] = *state;
+        }
+        grid
     }
 }
 

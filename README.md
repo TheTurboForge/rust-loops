@@ -69,6 +69,10 @@ first-reproduction timing; it is not a claim about intelligence or evolution.
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
   canonical rule/seed fixtures, and Golly differential tests are present.
+- `benchmark` is a single-threaded CPU JSONL harness that compares an exact
+  double-buffered dense runner with an exact sparse-frontier runner. It emits
+  timing, state hashes, update counts, approximate allocation, run metadata,
+  and an explicit hardware-counter status; it makes no efficiency claim.
 - The canonical generation-151 reference trajectory is independently frozen
   and checked in the private research archive.
 - UI, sparse/GPU execution, parallelism, performance benchmarking, and other
@@ -82,6 +86,21 @@ normalized fixture data.
 
 External papers, raw Golly rule tables/patterns, package bytes, and images are
 not redistributed by this repository.
+
+## Benchmark Harness
+
+Build release mode and run one declared case:
+
+```sh
+RUSTC_VERSION="$(rustc --version)" cargo build --release --bin benchmark
+RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
+  target/release/benchmark --workload canonical --generation 151 --world 512 \
+  --representation both --repetitions 30 --warmup 15 --timed-generations 100
+```
+
+Each line is one run record. Dense and sparse output hashes must match inside a
+`both` run or the process fails. Wall-clock time is required; hardware counters
+are reported only where host policy permits them.
 
 ## Epistemic Position
 
