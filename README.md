@@ -10,8 +10,9 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository is in its canonical-correctness phase. It is not yet a general
-CA framework, a viewer, a performance claim, or a learning/evolution system.
+The repository has completed canonical correctness and its first substrate
+characterization cycles. It is not yet a general CA framework, a viewer, a
+performance claim, or a learning/evolution system.
 
 ## Intended First Milestone
 
@@ -69,14 +70,18 @@ first-reproduction timing; it is not a claim about intelligence or evolution.
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
   canonical rule/seed fixtures, and Golly differential tests are present.
+- Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
 - `benchmark` is a single-threaded CPU JSONL harness that compares an exact
   double-buffered dense runner with an exact sparse-frontier runner. It emits
   timing, state hashes, update counts, approximate allocation, run metadata,
   and an explicit hardware-counter status; it makes no efficiency claim.
+- A deliberately narrow chunked candidate was evaluated under a preregistered
+  gate and not retained in the current API. Automatic representation selection
+  remains deferred until evidence exists from another rule family.
 - The canonical generation-151 reference trajectory is independently frozen
   and checked in the private research archive.
-- UI, sparse/GPU execution, parallelism, performance benchmarking, and other
-  rule families remain intentionally deferred.
+- UI, GPU execution, parallelism, and other rule families remain intentionally
+  deferred.
 
 ## Licensing And Provenance
 
