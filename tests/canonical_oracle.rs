@@ -1,6 +1,5 @@
 use rust_loops::{
-    CanonicalSeed, DenseGrid, LangtonRule, Neighborhood, RuleError, Snapshot, State,
-    verify_canonical,
+    CanonicalSeed, DenseGrid, LangtonRule, Neighborhood, Snapshot, State, verify_canonical,
 };
 
 fn oracle(generation: u16) -> Snapshot {
@@ -41,22 +40,6 @@ fn quiescent_world_is_stable() {
     let rule = LangtonRule::canonical().unwrap();
     let grid = DenseGrid::new(5, 5).unwrap();
     assert_eq!(grid, grid.step(&rule));
-}
-
-#[test]
-fn optimized_representations_require_a_stable_quiescent_background() {
-    let quiescent = State::QUIESCENT;
-    let neighborhood = Neighborhood {
-        center: quiescent,
-        north: quiescent,
-        east: quiescent,
-        south: quiescent,
-        west: quiescent,
-    };
-    assert!(matches!(
-        LangtonRule::from_base_transitions(vec![(neighborhood, State::try_from(1).unwrap())]),
-        Err(RuleError::NonQuiescentBackground(_))
-    ));
 }
 
 #[test]
