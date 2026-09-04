@@ -18,7 +18,7 @@ fn deterministic_field(width: usize, height: usize, seed: u64) -> DenseGrid {
             value ^= value << 13;
             value ^= value >> 7;
             value ^= value << 17;
-            if value % 11 == 0 {
+            if value.is_multiple_of(11) {
                 grid.set(x, y, State::try_from((value % 7 + 1) as u8).unwrap())
                     .unwrap();
             }
