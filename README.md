@@ -10,8 +10,9 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository is in its canonical-correctness phase. It is not yet a general
-CA framework, a viewer, a performance claim, or a learning/evolution system.
+The repository has completed canonical correctness and is characterizing exact
+single-threaded CPU representations. It is not yet a general CA framework, a
+viewer, a performance claim, or a learning/evolution system.
 
 ## Intended First Milestone
 
@@ -69,14 +70,18 @@ first-reproduction timing; it is not a claim about intelligence or evolution.
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
   canonical rule/seed fixtures, and Golly differential tests are present.
-- `benchmark` is a single-threaded CPU JSONL harness that compares an exact
-  double-buffered dense runner with an exact sparse-frontier runner. It emits
-  timing, state hashes, update counts, approximate allocation, run metadata,
-  and an explicit hardware-counter status; it makes no efficiency claim.
+- `benchmark` is a single-threaded CPU JSONL harness for exact dense,
+  sparse-frontier, and sparse-directory/dense-`32×32`-chunk runners. It emits
+  timing, state hashes, actual timed activity, representation work, logical
+  storage, process RSS, and explicit counter/energy status; it makes no broad
+  efficiency claim.
+- A benchmark-only identity transition table supports stable-occupancy uniform
+  and clustered controls. It is a representation microbenchmark, not a
+  Langton variant or scientific model.
 - The canonical generation-151 reference trajectory is independently frozen
   and checked in the private research archive.
-- UI, sparse/GPU execution, parallelism, performance benchmarking, and other
-  rule families remain intentionally deferred.
+- UI, GPU execution, parallelism, automatic representation selection, and
+  other rule families remain intentionally deferred.
 
 ## Licensing And Provenance
 
@@ -95,12 +100,22 @@ Build release mode and run one declared case:
 RUSTC_VERSION="$(rustc --version)" cargo build --release --bin benchmark
 RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
   target/release/benchmark --workload canonical --generation 151 --world 512 \
-  --representation both --repetitions 30 --warmup 15 --timed-generations 100
+  --representation all --repetitions 30 --warmup 15 --timed-generations 100
 ```
 
-Each line is one run record. Dense and sparse output hashes must match inside a
-`both` run or the process fails. Wall-clock time is required; hardware counters
-are reported only where host policy permits them.
+Run a controlled stable-occupancy case with:
+
+```sh
+target/release/benchmark --workload synthetic-identity --density-ppm 10000 \
+  --layout clustered --world 512 --representation all --repetitions 30 \
+  --warmup 15 --timed-generations 100
+```
+
+Each line is one schema-versioned run record. Every selected representation's
+output hash must match inside an `all` run or the process fails. `both` retains
+its original dense/sparse meaning. Wall-clock time is required; unavailable
+hardware counters, energy data, and physical byte traffic are reported as
+limitations rather than replaced by logical estimates.
 
 ## Epistemic Position
 
