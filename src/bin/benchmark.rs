@@ -1,5 +1,6 @@
 //! JSONL benchmark harness for exact CA representation comparisons.
 
+use std::collections::BTreeMap;
 use std::env;
 use std::fs;
 use std::process::ExitCode;
@@ -117,6 +118,7 @@ struct BenchmarkRecord {
     resident_memory_method: &'static str,
     rule_id: &'static str,
     rust_version: String,
+    state_populations: BTreeMap<String, usize>,
     timed_active_cell_max: usize,
     timed_active_cell_min: usize,
     timed_active_cell_mean: f64,
@@ -636,6 +638,7 @@ fn record(input: RecordInput<'_>) -> BenchmarkRecord {
         resident_memory_method: "Linux /proc/self/status VmRSS/VmHWM; process-level",
         rule_id: input.rule_id,
         rust_version: rust_version(),
+        state_populations: snapshot.state_populations,
         timed_active_cell_max: input.result.timed_active_cell_max,
         timed_active_cell_min: input.result.timed_active_cell_min,
         timed_active_cell_mean,
