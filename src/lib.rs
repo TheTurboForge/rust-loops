@@ -125,6 +125,11 @@ pub struct SdsrRule {
     transitions: TransitionLookup,
 }
 
+#[derive(Clone, Debug)]
+pub struct ExtendedSrControlRule {
+    transitions: TransitionLookup,
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RuleError {
     InvalidState(u8),
@@ -317,6 +322,50 @@ impl LocalRule for SdsrRule {
 
     fn state_count(&self) -> u8 {
         SDSR_STATE_COUNT
+    }
+
+    fn coordinate_basis(&self) -> &'static str {
+        SDSR_COORDINATE_BASIS
+    }
+}
+
+impl ExtendedSrControlRule {
+    pub fn project_control() -> Result<Self, RuleError> {
+        let document: RuleDocument =
+            serde_json::from_str(include_str!("../data/langton/transitions-cneswc.json"))
+                .map_err(|error| RuleError::Parse(error.to_string()))?;
+        if document.transitions.len() != 219 {
+            return Err(RuleError::InvalidTransitionCount {
+                expected: 219,
+                actual: document.transitions.len(),
+            });
+        }
+        let transitions = parse_transitions(document, CANONICAL_STATE_COUNT)?;
+        Ok(Self {
+            transitions: TransitionLookup::from_base_transitions(
+                transitions,
+                CANONICAL_STATE_COUNT,
+                |center| center,
+            )?,
+        })
+    }
+
+    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
+        LocalRule::next_state(self, neighborhood)
+    }
+
+    pub fn expanded_transition_count(&self) -> usize {
+        self.transitions.expanded_transition_count
+    }
+}
+
+impl LocalRule for ExtendedSrControlRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        self.transitions.next_state(neighborhood)
+    }
+
+    fn state_count(&self) -> u8 {
+        CANONICAL_STATE_COUNT
     }
 
     fn coordinate_basis(&self) -> &'static str {
@@ -1204,6 +1253,53 @@ mod chunked_tests {
             TransitionLookup::from_direct_lookup(&lookup, SDSR_STATE_COUNT).unwrap_err(),
             RuleError::NonQuiescentBackground(State::try_from(1).unwrap())
         );
+    }
+
+    #[test]
+    fn sdsr_changes_only_the_documented_langton_declared_rotation_family() {
+        let document: RuleDocument =
+            serde_json::from_str(include_str!("../data/langton/transitions-cneswc.json")).unwrap();
+        let declared = parse_transitions(document, CANONICAL_STATE_COUNT).unwrap();
+        let sdsr = SdsrRule::golly_3_3_profile().unwrap();
+        let control = ExtendedSrControlRule::project_control().unwrap();
+        let mut differences = Vec::new();
+        for (base, _) in declared {
+            let mut rotated = base;
+            for _ in 0..4 {
+                if sdsr.next_state(rotated) != control.next_state(rotated) {
+                    differences.push((rotated, sdsr.next_state(rotated)));
+                }
+                rotated = rotated.clockwise();
+            }
+        }
+        differences.sort();
+        differences.dedup();
+        assert_eq!(differences.len(), 4);
+        for (neighborhood, next) in differences {
+            assert_eq!(neighborhood.center, State::try_from(1).unwrap());
+            assert_eq!(
+                [
+                    neighborhood.north.value(),
+                    neighborhood.east.value(),
+                    neighborhood.south.value(),
+                    neighborhood.west.value(),
+                ]
+                .into_iter()
+                .filter(|state| *state == 1)
+                .count(),
+                2
+            );
+            assert_eq!(
+                BTreeSet::from([
+                    neighborhood.north.value(),
+                    neighborhood.east.value(),
+                    neighborhood.south.value(),
+                    neighborhood.west.value(),
+                ]),
+                BTreeSet::from([1, 2, 5])
+            );
+            assert_eq!(next, State::try_from(8).unwrap());
+        }
     }
 }
 

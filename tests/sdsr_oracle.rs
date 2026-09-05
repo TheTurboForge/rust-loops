@@ -1,6 +1,7 @@
 use rust_loops::{
-    ChunkedGrid, DenseGrid, LocalRule, Neighborhood, SDSR_COORDINATE_BASIS, SDSR_STATE_COUNT,
-    SdsrRule, SdsrSeed, Snapshot, SparseFrontierGrid, State, verify_sdsr_golly_profile,
+    ChunkedGrid, DenseGrid, ExtendedSrControlRule, LocalRule, Neighborhood, SDSR_COORDINATE_BASIS,
+    SDSR_STATE_COUNT, SdsrRule, SdsrSeed, Snapshot, SparseFrontierGrid, State,
+    verify_sdsr_golly_profile,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -97,6 +98,20 @@ fn sdsr_dense_sparse_and_chunked_match_through_second_replication() {
         sparse = sparse.step(&rule).0;
         chunked = chunked.step(&rule).0;
     }
+}
+
+#[test]
+fn extended_sr_control_preserves_the_unperturbed_early_trajectory() {
+    let sdsr = SdsrRule::golly_3_3_profile().unwrap();
+    let control = ExtendedSrControlRule::project_control().unwrap();
+    let seed = SdsrSeed::golly_3_3_profile().unwrap();
+    let initial = seed.place_in(256, 256, 64, 64).unwrap();
+    let sdsr_snapshot = Snapshot::from_grid_for_rule(&initial.run(&sdsr, 302), 302, &sdsr);
+    let control_snapshot = Snapshot::from_grid_for_rule(&initial.run(&control, 302), 302, &control);
+    assert_eq!(sdsr_snapshot.cells, control_snapshot.cells);
+    assert_eq!(sdsr_snapshot.bounds, control_snapshot.bounds);
+    assert_eq!(sdsr_snapshot.active_cell_count, 343);
+    assert_eq!(sdsr_snapshot.state_populations["8"], 0);
 }
 
 #[test]
