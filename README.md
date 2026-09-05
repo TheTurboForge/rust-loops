@@ -1,8 +1,8 @@
 # rust-loops
 
 `rust-loops` is a Rust laboratory for cellular automata, Artificial Life, and
-local persistent computation. Its first executable artifact is a deliberately
-small canonical Langton-loop calibration engine.
+local persistent computation. Its first executable artifacts are deliberately
+small, independently verified Langton and Byl loop calibration profiles.
 
 The long-term research question is whether artificial substrates built from
 cheap local interactions can support learning or evolution that discovers
@@ -10,9 +10,9 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository has completed canonical correctness and its first substrate
-characterization cycles. It is not yet a general CA framework, a viewer, a
-performance claim, or a learning/evolution system.
+The repository has completed two independent loop-family correctness gates and
+its first substrate-characterization cycles. It is not yet a general CA
+framework, a viewer, a performance claim, or a learning/evolution system.
 
 ## Intended First Milestone
 
@@ -49,10 +49,11 @@ The direct research lineage includes:
 See [Concepts](docs/concepts.md), [Loop family](docs/loop-family.md),
 [Reference model](docs/reference-model.md), and [References](docs/references.md).
 
-## Run The Canonical Engine
+## Run The Verified Profiles
 
 ```sh
-cargo run -- --generations 151
+cargo run --bin rust-loops -- --generations 151
+cargo run --bin rust-loops -- --rule byl-golly-3.3 --generations 25
 cargo test
 ```
 
@@ -66,10 +67,22 @@ The first reference result is 171 non-quiescent cells in a `26×15` active
 bounds box at generation 151. This is consistent with Langton's published
 first-reproduction timing; it is not a claim about intelligence or evolution.
 
+The Byl executable-reference profile has six states and a 12-cell seed. Its
+generation-25 state contains 25 active cells in `9×4` bounds and matches the
+paper's printed first-replication configuration. The suite compares every
+generation from `0` through `27`, plus generation `50`, with independently
+executed Golly 3.3 states.
+
+This profile is deliberately called `byl-golly-3.3`, not simply “canonical
+Byl.” The paper's transition-count statement, its visible transition table,
+and the table needed to reproduce its printed trajectory do not fully agree.
+The project preserves that conflict; it does not synthesize an undocumented
+resolution.
+
 ## Current Status
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
-  canonical rule/seed fixtures, and Golly differential tests are present.
+  Langton and Byl rule/seed fixtures, and Golly differential tests are present.
 - Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
 - `benchmark` is a single-threaded CPU JSONL harness that compares an exact
   double-buffered dense runner with an exact sparse-frontier runner. It emits
@@ -78,10 +91,10 @@ first-reproduction timing; it is not a claim about intelligence or evolution.
 - A deliberately narrow chunked candidate was evaluated under a preregistered
   gate and not retained in the current API. Automatic representation selection
   remains deferred until evidence exists from another rule family.
-- The canonical generation-151 reference trajectory is independently frozen
-  and checked in the private research archive.
-- UI, GPU execution, parallelism, and other rule families remain intentionally
-  deferred.
+- The Langton generation-151 and Byl generation-25 reference trajectories are
+  independently frozen and checked in the private research archive.
+- UI, GPU execution, parallelism, and additional rule families remain
+  intentionally deferred.
 
 ## Licensing And Provenance
 

@@ -45,14 +45,40 @@ They were independently executed by pinned Golly 3.3 `bgolly` with RuleLoader;
 Rust does not generate its expected states. A generation-302 continuation
 fixture is retained privately for the next calibration extension.
 
+## Byl Golly 3.3 Executable-Reference Profile
+
+- Six states numbered `0` through `5`.
+- Center/north/east/south/west neighborhood.
+- Deterministic synchronous generations and fourfold rotational symmetry.
+- A `4×4`, 12-cell initial pattern.
+- 144 active source rows expanding to 561 distinct neighborhoods.
+- Unlisted neighborhoods preserve the center state.
+- First completed daughter configuration at generation `25`.
+
+The public oracle covers every generation from `0` through `27`, plus `50`.
+The Rust runner matches those independently executed Golly 3.3 states exactly,
+including cells, state populations, bounds, and hashes. Generation `25` has 25
+active cells, `9×4` bounds, and hash
+`3f46c0896951a1d9a53395efe812a44570a8170659131765a6e04caa34419ef4`.
+
+This is not presented as an uncontested global Byl transition table. The paper
+reports 57 rules, its visible Table II contains 50 explicit and six default
+rules, and a literal transcription diverges from Figure 3 at generation `1`.
+The pinned Golly rule matches all 28 printed Figure 3 configurations. That
+source conflict remains part of the reference model.
+
 ## Representation-Economics Boundary
 
-The first performance experiment compares only two exact finite-world,
+The first performance experiment compared only two exact finite-world,
 single-threaded CPU representations: reusable double-buffered dense storage and
 a sparse frontier that evaluates every active cell plus its von Neumann
 neighbors. Both must yield the same normalized state snapshot for a declared
 run. Benchmark records distinguish total evaluated cells from active-cell
 updates and do not treat reduced logical work as an energy result.
+
+A later chunked candidate was evaluated and killed under its preregistered gate.
+The independent Byl family now provides the second rule profile required before
+any representation-selection policy is reconsidered.
 
 ## Experiment Metadata
 

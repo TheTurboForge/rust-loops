@@ -13,6 +13,26 @@ license with the provenance notice in `../NOTICE.md`.
   Golly 3.3's `bgolly` RuleLoader executor. Each was run twice before being
   frozen. They use the active-bounds origin, sorted `y,x,state` cell order,
   and carry a state-set SHA-256.
+- `byl-golly-3.3/transitions-cneswc.json`: the 144 active rows executed by
+  Golly 3.3's `Byl-Loop` rule, expanded at load time to 561 distinct
+  neighborhoods under fourfold rotation; SHA-256
+  `8813815e3af17aa71ce351bfa69358b3eb64ecf38eb44f739142e3f4595d84be`.
+  An unlisted neighborhood preserves its center state, matching the executable
+  rule's wildcard fallback.
+- `byl-golly-3.3/seed.json`: the six-state profile's `4×4`, 12-cell seed;
+  SHA-256
+  `0854641da00edc65974ac7a79d79b7c5fabf171946bffdbf1b0ba38a9662892f`.
+- `byl-golly-3.3/oracles-golly-3.3.json`: all normalized snapshots from
+  generations `0` through `27`, plus generation `50`; SHA-256
+  `92618fc55b8399a79eb8ea5f27fbbd4f97153b0d34506d6542b936743f5a880a`.
+  Each trajectory was executed twice before freezing.
+
+The Byl profile name is intentionally source-specific. Byl's paper says there
+are 57 transition rules, while its visible Table II contains 50 explicit and
+six default rules. A direct transcription of that table diverges from the
+paper's own Figure 3 at generation 1. The pinned Golly table instead matches
+all 28 printed Figure 3 configurations exactly. These sources are not silently
+merged into a supposedly canonical table.
 
 The public fixture set intentionally excludes raw papers, Golly package bytes,
 Golly rule/RLE source files, and rendered images.

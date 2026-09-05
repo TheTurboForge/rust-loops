@@ -36,6 +36,8 @@
   <https://doi.org/10.1080/03081079.2012.695902>
 - Golly RuleLoader reference:
   <https://golly.sourceforge.io/Help/Algorithms/RuleLoader.html>
+- Golly Rule Table Repository, pinned executable-reference commit:
+  <https://github.com/gollygang/ruletablerepository/tree/3646a185c6049180980de2989b27662a10bb3b86>
 
 Wikipedia's [Langton's loops](https://en.wikipedia.org/wiki/Langton%27s_loops)
 article is used as a discovery map, not as sole technical authority.

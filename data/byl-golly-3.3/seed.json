@@ -1,0 +1,68 @@
+{
+  "cells": [
+    {
+      "state": 2,
+      "x": 1,
+      "y": 0
+    },
+    {
+      "state": 2,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "state": 2,
+      "x": 0,
+      "y": 1
+    },
+    {
+      "state": 3,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "state": 1,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "state": 2,
+      "x": 3,
+      "y": 1
+    },
+    {
+      "state": 2,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "state": 3,
+      "x": 1,
+      "y": 2
+    },
+    {
+      "state": 4,
+      "x": 2,
+      "y": 2
+    },
+    {
+      "state": 2,
+      "x": 3,
+      "y": 2
+    },
+    {
+      "state": 2,
+      "x": 1,
+      "y": 3
+    },
+    {
+      "state": 5,
+      "x": 2,
+      "y": 3
+    }
+  ],
+  "coordinate_origin": "top-left RLE bounds",
+  "height": 4,
+  "rule": "Byl-Loop",
+  "width": 4
+}

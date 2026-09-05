@@ -1,4 +1,4 @@
-//! Deterministic, bounded calibration engine for canonical Langton loops.
+//! Deterministic, bounded calibration engine for independently verified CA loops.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -8,6 +8,8 @@ use sha2::{Digest, Sha256};
 
 pub const CANONICAL_STATE_COUNT: u8 = 8;
 pub const CANONICAL_COORDINATE_BASIS: &str = "Golly RLE active-bounds origin";
+pub const BYL_STATE_COUNT: u8 = 6;
+pub const BYL_COORDINATE_BASIS: &str = "active-bounds origin";
 
 #[derive(Clone, Copy, Debug, Default, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct State(u8);
@@ -76,10 +78,26 @@ impl Neighborhood {
     }
 }
 
+pub trait LocalRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State;
+    fn state_count(&self) -> u8;
+    fn coordinate_basis(&self) -> &'static str;
+}
+
 #[derive(Clone, Debug)]
-pub struct LangtonRule {
+struct TransitionLookup {
     lookup: Box<[State]>,
     expanded_transition_count: usize,
+}
+
+#[derive(Clone, Debug)]
+pub struct LangtonRule {
+    transitions: TransitionLookup,
+}
+
+#[derive(Clone, Debug)]
+pub struct BylRule {
+    transitions: TransitionLookup,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -93,7 +111,14 @@ pub enum RuleError {
         previous: State,
         next: State,
     },
-    InvalidTransitionCount(usize),
+    InvalidTransitionCount {
+        expected: usize,
+        actual: usize,
+    },
+    StateOutsideRule {
+        state: u8,
+        state_count: u8,
+    },
     Parse(String),
 }
 
@@ -124,40 +149,137 @@ impl LangtonRule {
             serde_json::from_str(include_str!("../data/langton/transitions-cneswc.json"))
                 .map_err(|error| RuleError::Parse(error.to_string()))?;
         if document.transitions.len() != 219 {
-            return Err(RuleError::InvalidTransitionCount(
-                document.transitions.len(),
-            ));
+            return Err(RuleError::InvalidTransitionCount {
+                expected: 219,
+                actual: document.transitions.len(),
+            });
         }
-        let transitions = document
-            .transitions
-            .into_iter()
-            .map(|item| {
-                Ok((
-                    Neighborhood {
-                        center: State::try_from(item.center)
-                            .map_err(|error| RuleError::InvalidState(error.0))?,
-                        north: State::try_from(item.north)
-                            .map_err(|error| RuleError::InvalidState(error.0))?,
-                        east: State::try_from(item.east)
-                            .map_err(|error| RuleError::InvalidState(error.0))?,
-                        south: State::try_from(item.south)
-                            .map_err(|error| RuleError::InvalidState(error.0))?,
-                        west: State::try_from(item.west)
-                            .map_err(|error| RuleError::InvalidState(error.0))?,
-                    },
-                    State::try_from(item.next).map_err(|error| RuleError::InvalidState(error.0))?,
-                ))
-            })
-            .collect::<Result<Vec<_>, RuleError>>()?;
+        let transitions = parse_transitions(document, CANONICAL_STATE_COUNT)?;
         Self::from_base_transitions(transitions)
     }
 
     pub fn from_base_transitions(
         transitions: Vec<(Neighborhood, State)>,
     ) -> Result<Self, RuleError> {
+        Ok(Self {
+            transitions: TransitionLookup::from_base_transitions(
+                transitions,
+                CANONICAL_STATE_COUNT,
+                |_| State::QUIESCENT,
+            )?,
+        })
+    }
+
+    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
+        LocalRule::next_state(self, neighborhood)
+    }
+
+    pub fn expanded_transition_count(&self) -> usize {
+        self.transitions.expanded_transition_count
+    }
+}
+
+impl LocalRule for LangtonRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        self.transitions.lookup[neighborhood.lookup_index()]
+    }
+
+    fn state_count(&self) -> u8 {
+        CANONICAL_STATE_COUNT
+    }
+
+    fn coordinate_basis(&self) -> &'static str {
+        CANONICAL_COORDINATE_BASIS
+    }
+}
+
+impl BylRule {
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let document: RuleDocument = serde_json::from_str(include_str!(
+            "../data/byl-golly-3.3/transitions-cneswc.json"
+        ))
+        .map_err(|error| RuleError::Parse(error.to_string()))?;
+        if document.transitions.len() != 144 {
+            return Err(RuleError::InvalidTransitionCount {
+                expected: 144,
+                actual: document.transitions.len(),
+            });
+        }
+        Self::from_base_transitions(parse_transitions(document, BYL_STATE_COUNT)?)
+    }
+
+    pub fn from_base_transitions(
+        transitions: Vec<(Neighborhood, State)>,
+    ) -> Result<Self, RuleError> {
+        Ok(Self {
+            transitions: TransitionLookup::from_base_transitions(
+                transitions,
+                BYL_STATE_COUNT,
+                |center| center,
+            )?,
+        })
+    }
+
+    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
+        LocalRule::next_state(self, neighborhood)
+    }
+
+    pub fn expanded_transition_count(&self) -> usize {
+        self.transitions.expanded_transition_count
+    }
+}
+
+impl LocalRule for BylRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        for state in [
+            neighborhood.center,
+            neighborhood.north,
+            neighborhood.east,
+            neighborhood.south,
+            neighborhood.west,
+        ] {
+            assert!(
+                state.value() < BYL_STATE_COUNT,
+                "state {} is outside Byl profile range 0..=5",
+                state.value()
+            );
+        }
+        self.transitions.lookup[neighborhood.lookup_index()]
+    }
+
+    fn state_count(&self) -> u8 {
+        BYL_STATE_COUNT
+    }
+
+    fn coordinate_basis(&self) -> &'static str {
+        BYL_COORDINATE_BASIS
+    }
+}
+
+impl TransitionLookup {
+    fn from_base_transitions(
+        transitions: Vec<(Neighborhood, State)>,
+        state_count: u8,
+        fallback: impl Fn(State) -> State,
+    ) -> Result<Self, RuleError> {
         let mut expanded = BTreeMap::new();
         let mut declared = BTreeMap::new();
         for (base, next) in transitions {
+            for state in [
+                base.center,
+                base.north,
+                base.east,
+                base.south,
+                base.west,
+                next,
+            ] {
+                if state.value() >= state_count {
+                    return Err(RuleError::StateOutsideRule {
+                        state: state.value(),
+                        state_count,
+                    });
+                }
+            }
             if declared.insert(base, next).is_some() {
                 return Err(RuleError::DuplicateBaseTransition { neighborhood: base });
             }
@@ -175,7 +297,12 @@ impl LangtonRule {
                 rotated = rotated.clockwise();
             }
         }
-        let mut lookup = vec![State::QUIESCENT; 8usize.pow(5)];
+        let mut lookup = (0..8usize.pow(5))
+            .map(|index| {
+                let center = State((index / 8usize.pow(4)) as u8);
+                fallback(center)
+            })
+            .collect::<Vec<_>>();
         for (neighborhood, next) in &expanded {
             lookup[neighborhood.lookup_index()] = *next;
         }
@@ -184,14 +311,39 @@ impl LangtonRule {
             expanded_transition_count: expanded.len(),
         })
     }
+}
 
-    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
-        self.lookup[neighborhood.lookup_index()]
-    }
-
-    pub fn expanded_transition_count(&self) -> usize {
-        self.expanded_transition_count
-    }
+fn parse_transitions(
+    document: RuleDocument,
+    state_count: u8,
+) -> Result<Vec<(Neighborhood, State)>, RuleError> {
+    let state = |value: u8| -> Result<State, RuleError> {
+        let state = State::try_from(value).map_err(|error| RuleError::InvalidState(error.0))?;
+        if value >= state_count {
+            Err(RuleError::StateOutsideRule {
+                state: value,
+                state_count,
+            })
+        } else {
+            Ok(state)
+        }
+    };
+    document
+        .transitions
+        .into_iter()
+        .map(|item| {
+            Ok((
+                Neighborhood {
+                    center: state(item.center)?,
+                    north: state(item.north)?,
+                    east: state(item.east)?,
+                    south: state(item.south)?,
+                    west: state(item.west)?,
+                },
+                state(item.next)?,
+            ))
+        })
+        .collect()
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -264,12 +416,12 @@ impl DenseGrid {
         self.cells[index] = state;
         Ok(())
     }
-    pub fn step(&self, rule: &LangtonRule) -> Self {
+    pub fn step<R: LocalRule + ?Sized>(&self, rule: &R) -> Self {
         let mut runner = DenseRunner::new(self.clone());
         runner.step(rule);
         runner.into_grid()
     }
-    pub fn run(&self, rule: &LangtonRule, generations: u64) -> Self {
+    pub fn run<R: LocalRule + ?Sized>(&self, rule: &R, generations: u64) -> Self {
         let mut runner = DenseRunner::new(self.clone());
         for _ in 0..generations {
             runner.step(rule);
@@ -297,7 +449,7 @@ impl DenseRunner {
         }
     }
 
-    pub fn step(&mut self, rule: &LangtonRule) -> StepStats {
+    pub fn step<R: LocalRule + ?Sized>(&mut self, rule: &R) -> StepStats {
         let mut next_active = 0usize;
         for y in 0..self.current.height {
             let row = y * self.current.width;
@@ -412,7 +564,7 @@ impl SparseFrontierGrid {
         candidates
     }
 
-    pub fn step(&self, rule: &LangtonRule) -> (Self, StepStats) {
+    pub fn step<R: LocalRule + ?Sized>(&self, rule: &R) -> (Self, StepStats) {
         let candidates = self.candidates();
         let mut cells = BTreeMap::new();
         for index in &candidates {
@@ -442,7 +594,7 @@ impl SparseFrontierGrid {
         )
     }
 
-    pub fn run(&self, rule: &LangtonRule, generations: u64) -> Self {
+    pub fn run<R: LocalRule + ?Sized>(&self, rule: &R, generations: u64) -> Self {
         let mut current = self.clone();
         for _ in 0..generations {
             current = current.step(rule).0;
@@ -529,6 +681,78 @@ impl CanonicalSeed {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct BylSeed {
+    width: usize,
+    height: usize,
+    cells: Vec<Cell>,
+}
+
+impl BylSeed {
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let document: SeedDocument =
+            serde_json::from_str(include_str!("../data/byl-golly-3.3/seed.json"))
+                .map_err(|error| RuleError::Parse(error.to_string()))?;
+        if document.width != 4 || document.height != 4 || document.cells.len() != 12 {
+            return Err(RuleError::Parse("Byl seed invariants failed".into()));
+        }
+        let mut states = BTreeSet::new();
+        let mut positions = BTreeSet::new();
+        for cell in &document.cells {
+            State::try_from(cell.state).map_err(|error| RuleError::InvalidState(error.0))?;
+            if cell.state == 0
+                || cell.state >= BYL_STATE_COUNT
+                || cell.x >= document.width
+                || cell.y >= document.height
+                || !positions.insert((cell.x, cell.y))
+            {
+                return Err(RuleError::Parse("invalid Byl seed cell".into()));
+            }
+            states.insert(cell.state);
+        }
+        if states != BTreeSet::from([1, 2, 3, 4, 5]) {
+            return Err(RuleError::Parse(
+                "unexpected Byl seed state signature".into(),
+            ));
+        }
+        Ok(Self {
+            width: document.width,
+            height: document.height,
+            cells: document.cells,
+        })
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.cells.len()
+    }
+
+    pub fn dimensions(&self) -> (usize, usize) {
+        (self.width, self.height)
+    }
+
+    pub fn place_in(
+        &self,
+        width: usize,
+        height: usize,
+        origin_x: usize,
+        origin_y: usize,
+    ) -> Result<DenseGrid, GridError> {
+        let mut grid = DenseGrid::new(width, height)?;
+        for cell in &self.cells {
+            grid.set(
+                origin_x
+                    .checked_add(cell.x)
+                    .ok_or(GridError::InvalidDimensions)?,
+                origin_y
+                    .checked_add(cell.y)
+                    .ok_or(GridError::InvalidDimensions)?,
+                State::try_from(cell.state).expect("validated Byl seed"),
+            )?;
+        }
+        Ok(grid)
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Snapshot {
     pub active_cell_count: usize,
@@ -549,6 +773,38 @@ pub struct Bounds {
 
 impl Snapshot {
     pub fn from_grid(grid: &DenseGrid, generation: u64) -> Self {
+        Self::from_grid_with_profile(
+            grid,
+            generation,
+            CANONICAL_STATE_COUNT,
+            CANONICAL_COORDINATE_BASIS,
+        )
+    }
+
+    pub fn from_grid_for_rule<R: LocalRule + ?Sized>(
+        grid: &DenseGrid,
+        generation: u64,
+        rule: &R,
+    ) -> Self {
+        Self::from_grid_with_profile(
+            grid,
+            generation,
+            rule.state_count(),
+            rule.coordinate_basis(),
+        )
+    }
+
+    fn from_grid_with_profile(
+        grid: &DenseGrid,
+        generation: u64,
+        state_count: u8,
+        coordinate_basis: &str,
+    ) -> Self {
+        assert!((2..=CANONICAL_STATE_COUNT).contains(&state_count));
+        assert!(
+            grid.cells.iter().all(|state| state.value() < state_count),
+            "grid contains a state outside the selected rule profile"
+        );
         let active = (0..grid.height)
             .flat_map(|y| {
                 (0..grid.width).filter_map(move |x| {
@@ -571,7 +827,7 @@ impl Snapshot {
             .collect::<Vec<_>>();
         cells.sort_by_key(|cell| (cell.y, cell.x, cell.state));
         let mut populations = BTreeMap::new();
-        for state in 1..CANONICAL_STATE_COUNT {
+        for state in 1..state_count {
             populations.insert(
                 state.to_string(),
                 cells.iter().filter(|cell| cell.state == state).count(),
@@ -595,7 +851,7 @@ impl Snapshot {
             active_cell_count: cells.len(),
             bounds,
             cells,
-            coordinate_basis: CANONICAL_COORDINATE_BASIS.into(),
+            coordinate_basis: coordinate_basis.into(),
             generation,
             state_hash_sha256: String::new(),
             state_populations: populations,
@@ -617,7 +873,7 @@ impl Snapshot {
             .join(",\n");
         format!(
             "{{\n  \"cells\": [\n{}\n  ],\n  \"coordinate_basis\": \"{}\"\n}}\n",
-            cells, CANONICAL_COORDINATE_BASIS
+            cells, self.coordinate_basis
         )
     }
     pub fn state_hash(&self) -> String {
@@ -640,6 +896,26 @@ pub fn verify_canonical(generation: u64, expected: &Snapshot) -> Result<(), Stri
     } else {
         Err(format!(
             "canonical mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
+            expected.state_hash_sha256,
+            actual.state_hash_sha256,
+            expected.active_cell_count,
+            actual.active_cell_count
+        ))
+    }
+}
+
+pub fn verify_byl_golly_profile(generation: u64, expected: &Snapshot) -> Result<(), String> {
+    let rule = BylRule::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let seed = BylSeed::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let grid = seed
+        .place_in(128, 128, 32, 32)
+        .map_err(|error| error.to_string())?;
+    let actual = Snapshot::from_grid_for_rule(&grid.run(&rule, generation), generation, &rule);
+    if actual == *expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "Byl Golly 3.3 profile mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
             expected.state_hash_sha256,
             actual.state_hash_sha256,
             expected.active_cell_count,

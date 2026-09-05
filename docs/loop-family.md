@@ -15,6 +15,10 @@
 
 Secondary summaries sometimes list Byl's loop as seven-state. Byl's original
 paper explicitly specifies six states, which is the value this project uses.
+The implemented package is more narrowly identified as the Golly 3.3
+executable-reference profile: its trajectory matches every printed Figure 3
+configuration, while a literal transcription of the paper's visible Table II
+does not. The conflicting sources remain separately identified.
 
 Variants will be implemented as separate named rule packages with their own
 sources, seeds, update semantics, and verification oracles.

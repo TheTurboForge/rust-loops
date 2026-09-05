@@ -1,0 +1,3968 @@
+{
+  "schema_version": 1,
+  "profile": "Golly 3.3 executable Byl-Loop reference",
+  "snapshots": [
+    {
+      "active_cell_count": 12,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 4
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 2,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 0,
+      "schema_version": 1,
+      "source": "generation-000.rle",
+      "state_hash_sha256": "1bc12780715f6b52ed939f7de7abb6805a9a658cc4aebbf3ceff5ccddb3fad8a",
+      "state_populations": {
+        "1": 1,
+        "2": 7,
+        "3": 2,
+        "4": 1,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 13,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 4
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 1,
+      "schema_version": 1,
+      "source": "generation-001.rle",
+      "state_hash_sha256": "a24a38b173dbdee0167b6db9fd8cc705ec5da534594a9dc48246268bc5522dc6",
+      "state_populations": {
+        "1": 1,
+        "2": 8,
+        "3": 2,
+        "4": 1,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 13,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 4
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 2,
+      "schema_version": 1,
+      "source": "generation-002.rle",
+      "state_hash_sha256": "9febcbd1e753301558f2366d1f767632cadbb9c2bbfd77cca1d25f94828dad02",
+      "state_populations": {
+        "1": 1,
+        "2": 7,
+        "3": 3,
+        "4": 1,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 14,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 5
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 3,
+      "schema_version": 1,
+      "source": "generation-003.rle",
+      "state_hash_sha256": "9093adb1a9acd01a7b3de0567ebae8cd6a4ce53795f103787c475efc1bcfd1fc",
+      "state_populations": {
+        "1": 2,
+        "2": 7,
+        "3": 3,
+        "4": 1,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 15,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 5
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 4,
+      "schema_version": 1,
+      "source": "generation-004.rle",
+      "state_hash_sha256": "05f0a8d68994533f120bbf9a34f7d7b8e154369a5642970c563defc2461b95a6",
+      "state_populations": {
+        "1": 2,
+        "2": 8,
+        "3": 3,
+        "4": 1,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 16,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 6
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 5,
+      "schema_version": 1,
+      "source": "generation-005.rle",
+      "state_hash_sha256": "37b3f020a765edfb78def26b01255fb237d577d86caa612c688a80e0957f1816",
+      "state_populations": {
+        "1": 3,
+        "2": 8,
+        "3": 3,
+        "4": 2,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 16,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 6
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 6,
+      "schema_version": 1,
+      "source": "generation-006.rle",
+      "state_hash_sha256": "7ee7ab8666de3e94cdb77d3c3602ded10c099e2ed1f2ce8d9b96516d1041a996",
+      "state_populations": {
+        "1": 1,
+        "2": 9,
+        "3": 4,
+        "4": 2,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 17,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 6
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 7,
+      "schema_version": 1,
+      "source": "generation-007.rle",
+      "state_hash_sha256": "98d5347d7e688398a9fc71090870dcaccb02c31ca48be0db2ad6cb23a94bcbff",
+      "state_populations": {
+        "1": 1,
+        "2": 9,
+        "3": 5,
+        "4": 2,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 19,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 7
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 8,
+      "schema_version": 1,
+      "source": "generation-008.rle",
+      "state_hash_sha256": "d85f1405014bb54053a3141c090ecde6d554e27f983bba5563a3b8ccfbc9d89d",
+      "state_populations": {
+        "1": 4,
+        "2": 9,
+        "3": 4,
+        "4": 2,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 20,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 7
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 9,
+      "schema_version": 1,
+      "source": "generation-009.rle",
+      "state_hash_sha256": "c6d8408106d054251c384d0fb45cfebbcbb008b5f422e0cc0079f4a095eb8637",
+      "state_populations": {
+        "1": 2,
+        "2": 10,
+        "3": 5,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 21,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 8
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 10,
+      "schema_version": 1,
+      "source": "generation-010.rle",
+      "state_hash_sha256": "68d3ff1ef2a914d31e34e9af1710e61ef341829775a5a304dae2921ed910ecea",
+      "state_populations": {
+        "1": 4,
+        "2": 10,
+        "3": 4,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 22,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 8
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 11,
+      "schema_version": 1,
+      "source": "generation-011.rle",
+      "state_hash_sha256": "16689d680f89caa44810d611728b523a7f22b0a03cc9cc2d7ae1169ea8353957",
+      "state_populations": {
+        "1": 3,
+        "2": 11,
+        "3": 5,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 23,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 12,
+      "schema_version": 1,
+      "source": "generation-012.rle",
+      "state_hash_sha256": "e49101f5b97090fdb65184ece5ba70d816a1dc8cdd5a8d9fb32afa877eb417a7",
+      "state_populations": {
+        "1": 5,
+        "2": 11,
+        "3": 4,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 23,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 13,
+      "schema_version": 1,
+      "source": "generation-013.rle",
+      "state_hash_sha256": "660edfff22d8b797a15672c9dd79b49e2a426c33325017881835f4a7c18bd992",
+      "state_populations": {
+        "1": 3,
+        "2": 12,
+        "3": 4,
+        "4": 4,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 25,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 14,
+      "schema_version": 1,
+      "source": "generation-014.rle",
+      "state_hash_sha256": "5a2877cfddee7212ac30543780b5c6a28f291470834ad030450b7025334f747a",
+      "state_populations": {
+        "1": 3,
+        "2": 13,
+        "3": 6,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 24,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 15,
+      "schema_version": 1,
+      "source": "generation-015.rle",
+      "state_hash_sha256": "de7ad8bf7bc00a2149e53b9ce1e4919bf6004b9c3348665eca78add7d5a38991",
+      "state_populations": {
+        "1": 4,
+        "2": 12,
+        "3": 5,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 24,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 16,
+      "schema_version": 1,
+      "source": "generation-016.rle",
+      "state_hash_sha256": "4144724cf1f014e78d3150e70a41ec5e1e8d0ffa252caf337ddb9f6e98c68f66",
+      "state_populations": {
+        "1": 3,
+        "2": 13,
+        "3": 5,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 17,
+      "schema_version": 1,
+      "source": "generation-017.rle",
+      "state_hash_sha256": "a12b841cb7624a59f3ddeb31ef304223a7a39241b717186c6f526ea6ff2bf6e6",
+      "state_populations": {
+        "1": 5,
+        "2": 13,
+        "3": 4,
+        "4": 4,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 18,
+      "schema_version": 1,
+      "source": "generation-018.rle",
+      "state_hash_sha256": "00c164521940e20927532c7a6948432d03b95992ea87025685e3b2b783f2af5d",
+      "state_populations": {
+        "1": 2,
+        "2": 14,
+        "3": 6,
+        "4": 4,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 27,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 1,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 19,
+      "schema_version": 1,
+      "source": "generation-019.rle",
+      "state_hash_sha256": "6ef14eb63837de0fe3aec9f378bf41744a0f7533c046bcb2321c74be87813f3f",
+      "state_populations": {
+        "1": 3,
+        "2": 15,
+        "3": 6,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 20,
+      "schema_version": 1,
+      "source": "generation-020.rle",
+      "state_hash_sha256": "09aea4eea9ac34ee7399467dfc333c8c08e69cc467e27816038e1fe43c951fe2",
+      "state_populations": {
+        "1": 4,
+        "2": 14,
+        "3": 5,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "active_cell_count": 28,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 5,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 21,
+      "schema_version": 1,
+      "source": "generation-021.rle",
+      "state_hash_sha256": "832300d439c352ea8087ff9ea7cf90be9507ac0ccb1abb63d1849dc2f86c7e6d",
+      "state_populations": {
+        "1": 4,
+        "2": 15,
+        "3": 4,
+        "4": 4,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 28,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 5,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 22,
+      "schema_version": 1,
+      "source": "generation-022.rle",
+      "state_hash_sha256": "cf274a0f0ebc64d25948dffbf7e05ea99a4115d55200f04f9a539dfb0b54cb38",
+      "state_populations": {
+        "1": 2,
+        "2": 16,
+        "3": 5,
+        "4": 4,
+        "5": 1
+      }
+    },
+    {
+      "active_cell_count": 28,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 5,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 23,
+      "schema_version": 1,
+      "source": "generation-023.rle",
+      "state_hash_sha256": "964acbef844cdfdf32156ac4fe1f622c3994a1898500ead74b02eba01ea2357c",
+      "state_populations": {
+        "1": 2,
+        "2": 16,
+        "3": 5,
+        "4": 3,
+        "5": 2
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 24,
+      "schema_version": 1,
+      "source": "generation-024.rle",
+      "state_hash_sha256": "43d0fd48a369acbb6452d92a085810e2a10d299bfa22722ed04e72d895d4ac6f",
+      "state_populations": {
+        "1": 2,
+        "2": 15,
+        "3": 4,
+        "4": 3,
+        "5": 2
+      }
+    },
+    {
+      "active_cell_count": 25,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 25,
+      "schema_version": 1,
+      "source": "generation-025.rle",
+      "state_hash_sha256": "3f46c0896951a1d9a53395efe812a44570a8170659131765a6e04caa34419ef4",
+      "state_populations": {
+        "1": 2,
+        "2": 15,
+        "3": 4,
+        "4": 2,
+        "5": 2
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 8,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 26,
+      "schema_version": 1,
+      "source": "generation-026.rle",
+      "state_hash_sha256": "71e00d2fac2cf0ed17679d151a1d69c7b731f000a39fa2df856a404a877d0304",
+      "state_populations": {
+        "1": 2,
+        "2": 16,
+        "3": 4,
+        "4": 2,
+        "5": 2
+      }
+    },
+    {
+      "active_cell_count": 26,
+      "bounds": {
+        "height": 4,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 9
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 6,
+          "y": 1
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 8,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 3
+        },
+        {
+          "state": 5,
+          "x": 8,
+          "y": 3
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 27,
+      "schema_version": 1,
+      "source": "generation-027.rle",
+      "state_hash_sha256": "035144d29b9061b6b0c1e2aee1aa99be008a65579bec2f1d958a32289e006035",
+      "state_populations": {
+        "1": 2,
+        "2": 14,
+        "3": 6,
+        "4": 2,
+        "5": 2
+      }
+    },
+    {
+      "active_cell_count": 50,
+      "bounds": {
+        "height": 9,
+        "min_x": 0,
+        "min_y": 0,
+        "width": 14
+      },
+      "cells": [
+        {
+          "state": 2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "state": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "state": 5,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "state": 5,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 11,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 12,
+          "y": 5
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 6
+        },
+        {
+          "state": 4,
+          "x": 1,
+          "y": 6
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 6
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 6
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 6
+        },
+        {
+          "state": 1,
+          "x": 6,
+          "y": 6
+        },
+        {
+          "state": 4,
+          "x": 7,
+          "y": 6
+        },
+        {
+          "state": 5,
+          "x": 8,
+          "y": 6
+        },
+        {
+          "state": 2,
+          "x": 10,
+          "y": 6
+        },
+        {
+          "state": 3,
+          "x": 11,
+          "y": 6
+        },
+        {
+          "state": 1,
+          "x": 12,
+          "y": 6
+        },
+        {
+          "state": 2,
+          "x": 13,
+          "y": 6
+        },
+        {
+          "state": 2,
+          "x": 0,
+          "y": 7
+        },
+        {
+          "state": 1,
+          "x": 1,
+          "y": 7
+        },
+        {
+          "state": 3,
+          "x": 2,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 3,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 5,
+          "y": 7
+        },
+        {
+          "state": 3,
+          "x": 6,
+          "y": 7
+        },
+        {
+          "state": 3,
+          "x": 7,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 8,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 10,
+          "y": 7
+        },
+        {
+          "state": 3,
+          "x": 11,
+          "y": 7
+        },
+        {
+          "state": 4,
+          "x": 12,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 13,
+          "y": 7
+        },
+        {
+          "state": 2,
+          "x": 1,
+          "y": 8
+        },
+        {
+          "state": 2,
+          "x": 2,
+          "y": 8
+        },
+        {
+          "state": 2,
+          "x": 6,
+          "y": 8
+        },
+        {
+          "state": 2,
+          "x": 7,
+          "y": 8
+        },
+        {
+          "state": 2,
+          "x": 9,
+          "y": 8
+        },
+        {
+          "state": 2,
+          "x": 11,
+          "y": 8
+        },
+        {
+          "state": 5,
+          "x": 12,
+          "y": 8
+        }
+      ],
+      "coordinate_basis": "active-bounds origin",
+      "generation": 50,
+      "schema_version": 1,
+      "source": "generation-050.rle",
+      "state_hash_sha256": "f8d6541cf643b2be50ac931523d5e01c13f7241745e83f56b7237a6105378785",
+      "state_populations": {
+        "1": 4,
+        "2": 30,
+        "3": 8,
+        "4": 4,
+        "5": 4
+      }
+    }
+  ]
+}

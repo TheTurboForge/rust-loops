@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.97"
 license = "GPL-3.0-or-later"
-description = "A deterministic canonical Langton-loop calibration engine"
+description = "A deterministic calibration engine for independently verified cellular-automaton loops"
 repository = "https://github.com/TheTurboForge/rust-loops"
 
 [dependencies]
