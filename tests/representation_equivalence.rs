@@ -196,6 +196,25 @@ fn chunked_halos_cover_all_edges_and_partial_chunks() {
 }
 
 #[test]
+fn chunked_random_access_and_active_iteration_match_dense_state() {
+    let dense = deterministic_field(65, 67, 0xa11c_e115_u64);
+    let chunked = ChunkedGrid::from_dense(&dense);
+    assert_eq!(chunked.active_cells().len(), dense.active_cell_count());
+    for cell in chunked.active_cells() {
+        assert_eq!(
+            chunked.get(cell.x, cell.y).unwrap(),
+            State::try_from(cell.state).unwrap()
+        );
+        assert_eq!(
+            dense.get(cell.x, cell.y).unwrap(),
+            chunked.get(cell.x, cell.y).unwrap()
+        );
+    }
+    assert!(chunked.get(65, 0).is_err());
+    assert!(chunked.get(0, 67).is_err());
+}
+
+#[test]
 fn chunked_runner_recycles_without_stale_cells() {
     let rule = LangtonRule::from_base_transitions(Vec::new()).unwrap();
     let mut dense = DenseGrid::new(96, 96).unwrap();

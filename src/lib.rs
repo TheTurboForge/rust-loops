@@ -934,6 +934,42 @@ impl ChunkedGrid {
             .unwrap_or(State::QUIESCENT)
     }
 
+    pub fn get(&self, x: usize, y: usize) -> Result<State, GridError> {
+        if x >= self.width || y >= self.height {
+            return Err(GridError::OutOfBounds { x, y });
+        }
+        Ok(self.state_at(x, y))
+    }
+
+    pub fn active_cells(&self) -> Vec<Cell> {
+        let mut cells = Vec::with_capacity(self.active_cell_count);
+        for (chunk_index, chunk) in self
+            .chunks
+            .iter()
+            .enumerate()
+            .filter_map(|(index, chunk)| chunk.as_ref().map(|chunk| (index, chunk)))
+        {
+            let chunk_x = chunk_index % self.chunks_wide;
+            let chunk_y = chunk_index / self.chunks_wide;
+            let valid_width = self.valid_chunk_width(chunk_x);
+            let valid_height = self.valid_chunk_height(chunk_y);
+            for local_y in 0..valid_height {
+                for local_x in 0..valid_width {
+                    let state = chunk.cells[local_y * CHUNK_SIDE + local_x];
+                    if state != State::QUIESCENT {
+                        cells.push(Cell {
+                            state: state.value(),
+                            x: chunk_x * CHUNK_SIDE + local_x,
+                            y: chunk_y * CHUNK_SIDE + local_y,
+                        });
+                    }
+                }
+            }
+        }
+        cells.sort_by_key(|cell| (cell.y, cell.x, cell.state));
+        cells
+    }
+
     pub fn step<R: LocalRule + ?Sized>(&self, rule: &R) -> (Self, StepStats) {
         let mut runner = ChunkedRunner::new(self.clone());
         let stats = runner.step(rule).step;
