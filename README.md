@@ -85,9 +85,11 @@ resolution.
   Langton and Byl rule/seed fixtures, and Golly differential tests are present.
 - Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
 - `benchmark` is a single-threaded CPU JSONL harness that compares an exact
-  double-buffered dense runner with an exact sparse-frontier runner. It emits
-  timing, state hashes, update counts, approximate allocation, run metadata,
-  and an explicit hardware-counter status; it makes no efficiency claim.
+  double-buffered dense runner with an exact sparse-frontier runner for either
+  verified profile. Schema version 3 emits timing, rule/fixture identity,
+  state hashes, actual timed activity, spatial-locality summaries, logical
+  storage, process RSS, update counts, and explicit counter/energy status; it
+  makes no efficiency claim.
 - A deliberately narrow chunked candidate was evaluated under a preregistered
   gate and not retained in the current API. Automatic representation selection
   remains deferred until evidence exists from another rule family.
@@ -114,11 +116,18 @@ RUSTC_VERSION="$(rustc --version)" cargo build --release --bin benchmark
 RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
   target/release/benchmark --workload canonical --generation 151 --world 512 \
   --representation both --repetitions 30 --warmup 15 --timed-generations 100
+
+RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
+  target/release/benchmark --rule byl-golly-3.3 --workload canonical \
+  --generation 25 --world 512 --representation both --repetitions 30 \
+  --warmup 15 --timed-generations 100
 ```
 
 Each line is one run record. Dense and sparse output hashes must match inside a
-`both` run or the process fails. Wall-clock time is required; hardware counters
-are reported only where host policy permits them.
+`both` run or the process fails. The default rule remains Langton for command
+compatibility. Wall-clock time is required; hardware counters and energy are
+reported only where the host and experiment provide them. Logical storage and
+`32×32` occupancy summaries are not measured physical memory traffic.
 
 ## Epistemic Position
 

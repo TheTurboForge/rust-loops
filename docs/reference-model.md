@@ -69,12 +69,13 @@ source conflict remains part of the reference model.
 
 ## Representation-Economics Boundary
 
-The first performance experiment compared only two exact finite-world,
-single-threaded CPU representations: reusable double-buffered dense storage and
-a sparse frontier that evaluates every active cell plus its von Neumann
-neighbors. Both must yield the same normalized state snapshot for a declared
-run. Benchmark records distinguish total evaluated cells from active-cell
-updates and do not treat reduced logical work as an energy result.
+The benchmark supports two exact finite-world, single-threaded CPU
+representations: reusable double-buffered dense storage and a sparse frontier
+that evaluates every active cell plus its von Neumann neighbors. Both must
+yield the same rule-aware normalized state snapshot for a declared run. Records
+identify the selected rule and fixtures, distinguish total evaluated cells
+from active-cell updates, and do not treat reduced logical work or logical
+`32×32` occupancy as an energy or physical-traffic result.
 
 A later chunked candidate was evaluated and killed under its preregistered gate.
 The independent Byl family now provides the second rule profile required before
