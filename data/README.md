@@ -26,6 +26,16 @@ license with the provenance notice in `../NOTICE.md`.
   generations `0` through `27`, plus generation `50`; SHA-256
   `92618fc55b8399a79eb8ea5f27fbbd4f97153b0d34506d6542b936743f5a880a`.
   Each trajectory was executed twice before freezing.
+- `benchmark/identity-rule.json`: the project-authored stable-occupancy
+  identity-control specification; SHA-256
+  `e62113ac6654662762d93e3ab5ea38f5e7d6501a5477a2eff9df1187d4728736`.
+- `benchmark/synthetic-generator.json`: the deterministic uniform and
+  centered-clustered field generator contract; SHA-256
+  `35214b8326340c22dea33898a9bf849d2066cf162b926855120c115645faef8a`.
+
+The identity profile is a benchmark control, not a scientific CA-loop model.
+It exists to keep timed occupancy stable while representation costs are
+measured. Uniform/clustered pairs preserve the exact active-state multiset.
 
 The Byl profile name is intentionally source-specific. Byl's paper says there
 are 57 transition rules, while its visible Table II contains 50 explicit and

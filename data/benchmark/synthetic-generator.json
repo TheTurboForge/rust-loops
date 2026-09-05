@@ -1,0 +1,9 @@
+{
+  "profile": "xorshift64-threshold-v1",
+  "seed": 1592639710,
+  "scan_order": "row-major y,x",
+  "active_test": "xorshift64(seed) mod 1000000 < density_ppm",
+  "active_state": "same generated value mod 7 + 1",
+  "uniform_layout": "generated coordinates",
+  "clustered_layout": "preserve row-major active-state multiset; place into the smallest centered row-major rectangle whose width is ceil(sqrt(active_count))"
+}

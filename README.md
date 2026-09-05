@@ -84,15 +84,16 @@ resolution.
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
   Langton and Byl rule/seed fixtures, and Golly differential tests are present.
 - Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
-- `benchmark` is a single-threaded CPU JSONL harness that compares an exact
-  double-buffered dense runner with an exact sparse-frontier runner for either
-  verified profile. Schema version 3 emits timing, rule/fixture identity,
-  state hashes, actual timed activity, spatial-locality summaries, logical
-  storage, process RSS, update counts, and explicit counter/energy status; it
+- `benchmark` is a single-threaded CPU JSONL harness for exact dense,
+  sparse-frontier, and explicit `32×32` chunked representations under either
+  verified rule profile. Schema version 4 emits timing, provenance, exact
+  output hashes, actual activity/locality, logical capacity, fixture-owned
+  process-RSS deltas, update counts, and explicit counter/energy status; it
   makes no efficiency claim.
-- A deliberately narrow chunked candidate was evaluated under a preregistered
-  gate and not retained in the current API. Automatic representation selection
-  remains deferred until evidence exists from another rule family.
+- The first chunked candidate was killed under its preregistered aggregate
+  timeout gate. A second rule-generic candidate is now exposed explicitly for
+  a separately preregistered cross-rule experiment. It is not automatically
+  selected and has not yet passed its decision gate.
 - The Langton generation-151 and Byl generation-25 reference trajectories are
   independently frozen and checked in the private research archive.
 - UI, GPU execution, parallelism, and additional rule families remain
@@ -119,15 +120,23 @@ RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
 
 RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
   target/release/benchmark --rule byl-golly-3.3 --workload canonical \
-  --generation 25 --world 512 --representation both --repetitions 30 \
+  --generation 25 --world 512 --representation all --repetitions 30 \
   --warmup 15 --timed-generations 100
+
+RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
+  target/release/benchmark --workload identity --density-ppm 10000 \
+  --layout clustered --seed 1592639710 --world 512 --representation chunked \
+  --repetitions 1 --warmup 15 --timed-generations 100
 ```
 
-Each line is one run record. Dense and sparse output hashes must match inside a
-`both` run or the process fails. The default rule remains Langton for command
-compatibility. Wall-clock time is required; hardware counters and energy are
-reported only where the host and experiment provide them. Logical storage and
-`32×32` occupancy summaries are not measured physical memory traffic.
+Each line is one run record. All selected representation output hashes must
+match or the process fails. `both` retains dense/sparse compatibility; `all`
+adds the explicit chunked candidate. The identity workload is a stable-density
+storage/kernel control, not a loop result. The default scientific rule remains
+Langton for command compatibility. Wall-clock time is required; hardware
+counters and energy are reported only where the host and experiment provide
+them. Logical capacity, process RSS deltas, and `32×32` occupancy summaries are
+not allocator-exact ownership, physical memory traffic, or energy.
 
 ## Epistemic Position
 

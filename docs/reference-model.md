@@ -69,17 +69,25 @@ source conflict remains part of the reference model.
 
 ## Representation-Economics Boundary
 
-The benchmark supports two exact finite-world, single-threaded CPU
-representations: reusable double-buffered dense storage and a sparse frontier
-that evaluates every active cell plus its von Neumann neighbors. Both must
-yield the same rule-aware normalized state snapshot for a declared run. Records
-identify the selected rule and fixtures, distinguish total evaluated cells
-from active-cell updates, and do not treat reduced logical work or logical
-`32×32` occupancy as an energy or physical-traffic result.
+The benchmark supports exact finite-world, single-threaded CPU comparison of
+reusable double-buffered dense storage, an ordered-map sparse frontier, and an
+explicit rule-generic candidate using a sparse directory of dense `32×32`
+chunks. Each must yield the same rule-aware normalized state snapshot for a
+declared run. The chunked representation requires a stable quiescent
+background, uses active-edge candidate propagation, and remains manually
+selected while its second preregistered gate is evaluated.
 
-A later chunked candidate was evaluated and killed under its preregistered gate.
-The independent Byl family now provides the second rule profile required before
-any representation-selection policy is reconsidered.
+Records identify the selected rule and fixtures, distinguish total evaluated
+cells from active-cell updates, and report logical capacity separately from
+process-level RSS deltas. They do not treat reduced logical work, RSS deltas,
+or logical `32×32` occupancy as allocator-exact ownership, physical traffic,
+energy, or hardware-general superiority. The benchmark-only identity rule
+holds occupancy constant; it is not a scientific loop profile.
+
+The historical first chunked candidate was killed by aggregate timeouts. Its
+raw negative evidence remains valid and is not overwritten by the narrower
+per-process cross-rule experiment now in progress. No automatic representation
+dispatcher exists.
 
 ## Experiment Metadata
 

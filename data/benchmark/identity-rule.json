@@ -1,0 +1,8 @@
+{
+  "profile": "benchmark-identity-v1",
+  "state_count": 8,
+  "neighborhood_order": ["center", "north", "east", "south", "west"],
+  "transition": "next = center",
+  "quiescent_state": 0,
+  "purpose": "stable-occupancy representation control; not a scientific loop rule"
+}

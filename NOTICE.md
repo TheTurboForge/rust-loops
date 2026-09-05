@@ -1,10 +1,13 @@
 # Provenance and Attribution
 
-`data/langton/` and `data/byl-golly-3.3/` are project-authored normalized
-representations of transition, seed, and reference-state data. They are used
-as executable fixture data by this GPL-3.0-or-later project; they do not
+`data/langton/`, `data/byl-golly-3.3/`, and `data/benchmark/` are
+project-authored normalized representations of transition, seed,
+reference-state, and deterministic benchmark-control data. They are used as
+executable fixture data by this GPL-3.0-or-later project; they do not
 redistribute Golly source code, Golly rule files, RLE files, binaries, or the
-source papers.
+source papers. The benchmark identity rule and synthetic generator are
+original project controls rather than claims about an external scientific
+model.
 
 Sources consulted and recorded in the private research archive:
 

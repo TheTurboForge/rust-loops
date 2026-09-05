@@ -10,6 +10,13 @@ pub const CANONICAL_STATE_COUNT: u8 = 8;
 pub const CANONICAL_COORDINATE_BASIS: &str = "Golly RLE active-bounds origin";
 pub const BYL_STATE_COUNT: u8 = 6;
 pub const BYL_COORDINATE_BASIS: &str = "active-bounds origin";
+pub const CHUNK_SIDE: usize = 32;
+const CHUNK_AREA: usize = CHUNK_SIDE * CHUNK_SIDE;
+const HALO_SIDE: usize = CHUNK_SIDE + 2;
+const EDGE_NORTH: u8 = 1;
+const EDGE_EAST: u8 = 2;
+const EDGE_SOUTH: u8 = 4;
+const EDGE_WEST: u8 = 8;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct State(u8);
@@ -119,6 +126,7 @@ pub enum RuleError {
         state: u8,
         state_count: u8,
     },
+    NonQuiescentBackground(State),
     Parse(String),
 }
 
@@ -305,6 +313,9 @@ impl TransitionLookup {
             .collect::<Vec<_>>();
         for (neighborhood, next) in &expanded {
             lookup[neighborhood.lookup_index()] = *next;
+        }
+        if lookup[0] != State::QUIESCENT {
+            return Err(RuleError::NonQuiescentBackground(lookup[0]));
         }
         Ok(Self {
             lookup: lookup.into_boxed_slice(),
@@ -498,9 +509,27 @@ impl DenseRunner {
     pub fn grid(&self) -> &DenseGrid {
         &self.current
     }
+    pub fn logical_storage_bytes(&self) -> usize {
+        (self.current.cells.capacity() + self.next.cells.capacity()) * std::mem::size_of::<State>()
+    }
     pub fn into_grid(self) -> DenseGrid {
         self.current
     }
+}
+
+fn assert_quiescent_background<R: LocalRule + ?Sized>(rule: &R) {
+    let quiescent = Neighborhood {
+        center: State::QUIESCENT,
+        north: State::QUIESCENT,
+        east: State::QUIESCENT,
+        south: State::QUIESCENT,
+        west: State::QUIESCENT,
+    };
+    assert_eq!(
+        rule.next_state(quiescent),
+        State::QUIESCENT,
+        "sparse representations require a stable quiescent background"
+    );
 }
 
 /// Exact sparse-frontier representation for a finite quiescent world.
@@ -530,6 +559,12 @@ impl SparseFrontierGrid {
 
     pub fn active_cell_count(&self) -> usize {
         self.cells.len()
+    }
+
+    /// Lower bound containing only stored key/state payloads, not B-tree node
+    /// metadata, allocator overhead, or the temporary candidate set.
+    pub fn logical_storage_bytes_lower_bound(&self) -> usize {
+        self.cells.len() * (std::mem::size_of::<usize>() + std::mem::size_of::<State>())
     }
 
     fn at_or_quiescent(&self, x: isize, y: isize) -> State {
@@ -565,6 +600,7 @@ impl SparseFrontierGrid {
     }
 
     pub fn step<R: LocalRule + ?Sized>(&self, rule: &R) -> (Self, StepStats) {
+        assert_quiescent_background(rule);
         let candidates = self.candidates();
         let mut cells = BTreeMap::new();
         for index in &candidates {
@@ -609,6 +645,404 @@ impl SparseFrontierGrid {
             grid.cells[*index] = *state;
         }
         grid
+    }
+}
+
+#[derive(Clone, Debug)]
+struct Chunk {
+    cells: Box<[State]>,
+    active_cell_count: usize,
+    active_edges: u8,
+}
+
+impl Chunk {
+    fn empty(cells: Box<[State]>) -> Self {
+        Self {
+            cells,
+            active_cell_count: 0,
+            active_edges: 0,
+        }
+    }
+}
+
+/// Exact finite grid with sparse allocation of dense `32×32` chunks.
+///
+/// Chunks are directory-addressed rather than stored in an ordered per-cell
+/// map. Only chunks containing active cells are retained between generations.
+#[derive(Clone, Debug)]
+pub struct ChunkedGrid {
+    width: usize,
+    height: usize,
+    chunks_wide: usize,
+    chunks_high: usize,
+    chunks: Vec<Option<Chunk>>,
+    active_cell_count: usize,
+}
+
+/// Additional accounting emitted by an exact chunked step.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ChunkStepStats {
+    pub step: StepStats,
+    pub chunk_evaluations: usize,
+    pub allocated_chunks_after_step: usize,
+}
+
+/// Reusable synchronous runner for [`ChunkedGrid`].
+#[derive(Clone, Debug)]
+pub struct ChunkedRunner {
+    current: ChunkedGrid,
+    next: ChunkedGrid,
+    candidates: Vec<bool>,
+    halo: Vec<State>,
+    chunk_pool: Vec<Box<[State]>>,
+}
+
+impl ChunkedGrid {
+    fn empty(width: usize, height: usize) -> Result<Self, GridError> {
+        if width == 0 || height == 0 {
+            return Err(GridError::InvalidDimensions);
+        }
+        let chunks_wide = width.div_ceil(CHUNK_SIDE);
+        let chunks_high = height.div_ceil(CHUNK_SIDE);
+        Ok(Self {
+            width,
+            height,
+            chunks_wide,
+            chunks_high,
+            chunks: vec![None; chunks_wide * chunks_high],
+            active_cell_count: 0,
+        })
+    }
+
+    pub fn from_dense(grid: &DenseGrid) -> Self {
+        let mut chunked = Self::empty(grid.width, grid.height).expect("dense dimensions are valid");
+        for y in 0..grid.height {
+            for x in 0..grid.width {
+                let state = grid.cells[y * grid.width + x];
+                if state == State::QUIESCENT {
+                    continue;
+                }
+                let chunk_x = x / CHUNK_SIDE;
+                let chunk_y = y / CHUNK_SIDE;
+                let chunk_index = chunk_y * chunked.chunks_wide + chunk_x;
+                let local_x = x % CHUNK_SIDE;
+                let local_y = y % CHUNK_SIDE;
+                let chunk = chunked.chunks[chunk_index].get_or_insert_with(|| {
+                    Chunk::empty(vec![State::QUIESCENT; CHUNK_AREA].into_boxed_slice())
+                });
+                chunk.cells[local_y * CHUNK_SIDE + local_x] = state;
+                chunk.active_cell_count += 1;
+                chunk.active_edges |= edge_bits(local_x, local_y);
+                chunked.active_cell_count += 1;
+            }
+        }
+        chunked
+    }
+
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
+    pub fn height(&self) -> usize {
+        self.height
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.active_cell_count
+    }
+
+    pub fn allocated_chunk_count(&self) -> usize {
+        self.chunks.iter().flatten().count()
+    }
+
+    pub fn logical_storage_bytes(&self) -> usize {
+        self.chunks.capacity() * std::mem::size_of::<Option<Chunk>>()
+            + self.allocated_chunk_count() * CHUNK_AREA * std::mem::size_of::<State>()
+    }
+
+    fn chunk_index(&self, chunk_x: usize, chunk_y: usize) -> usize {
+        chunk_y * self.chunks_wide + chunk_x
+    }
+
+    fn valid_chunk_width(&self, chunk_x: usize) -> usize {
+        (self.width - chunk_x * CHUNK_SIDE).min(CHUNK_SIDE)
+    }
+
+    fn valid_chunk_height(&self, chunk_y: usize) -> usize {
+        (self.height - chunk_y * CHUNK_SIDE).min(CHUNK_SIDE)
+    }
+
+    fn state_at(&self, x: usize, y: usize) -> State {
+        let chunk_x = x / CHUNK_SIDE;
+        let chunk_y = y / CHUNK_SIDE;
+        self.chunks[self.chunk_index(chunk_x, chunk_y)]
+            .as_ref()
+            .map(|chunk| chunk.cells[(y % CHUNK_SIDE) * CHUNK_SIDE + x % CHUNK_SIDE])
+            .unwrap_or(State::QUIESCENT)
+    }
+
+    pub fn step<R: LocalRule + ?Sized>(&self, rule: &R) -> (Self, StepStats) {
+        let mut runner = ChunkedRunner::new(self.clone());
+        let stats = runner.step(rule).step;
+        (runner.into_grid(), stats)
+    }
+
+    pub fn run<R: LocalRule + ?Sized>(&self, rule: &R, generations: u64) -> Self {
+        let mut runner = ChunkedRunner::new(self.clone());
+        for _ in 0..generations {
+            runner.step(rule);
+        }
+        runner.into_grid()
+    }
+
+    pub fn to_dense(&self) -> DenseGrid {
+        let mut grid =
+            DenseGrid::new(self.width, self.height).expect("stored dimensions are valid");
+        for y in 0..self.height {
+            for x in 0..self.width {
+                grid.cells[y * self.width + x] = self.state_at(x, y);
+            }
+        }
+        grid
+    }
+}
+
+fn edge_bits(local_x: usize, local_y: usize) -> u8 {
+    let mut edges = 0;
+    if local_y == 0 {
+        edges |= EDGE_NORTH;
+    }
+    if local_x + 1 == CHUNK_SIDE {
+        edges |= EDGE_EAST;
+    }
+    if local_y + 1 == CHUNK_SIDE {
+        edges |= EDGE_SOUTH;
+    }
+    if local_x == 0 {
+        edges |= EDGE_WEST;
+    }
+    edges
+}
+
+impl ChunkedRunner {
+    pub fn new(current: ChunkedGrid) -> Self {
+        let next = ChunkedGrid::empty(current.width, current.height)
+            .expect("existing dimensions are valid");
+        Self {
+            candidates: vec![false; current.chunks.len()],
+            halo: vec![State::QUIESCENT; HALO_SIDE * HALO_SIDE],
+            current,
+            next,
+            chunk_pool: Vec::new(),
+        }
+    }
+
+    fn recycle_next(&mut self) {
+        for slot in &mut self.next.chunks {
+            if let Some(chunk) = slot.take() {
+                self.chunk_pool.push(chunk.cells);
+            }
+        }
+        self.next.active_cell_count = 0;
+        self.candidates.fill(false);
+    }
+
+    fn mark_candidates(&mut self) {
+        for chunk_y in 0..self.current.chunks_high {
+            for chunk_x in 0..self.current.chunks_wide {
+                let index = self.current.chunk_index(chunk_x, chunk_y);
+                let Some(chunk) = self.current.chunks[index].as_ref() else {
+                    continue;
+                };
+                self.candidates[index] = true;
+                if chunk.active_edges & EDGE_NORTH != 0 && chunk_y > 0 {
+                    self.candidates[index - self.current.chunks_wide] = true;
+                }
+                if chunk.active_edges & EDGE_EAST != 0 && chunk_x + 1 < self.current.chunks_wide {
+                    self.candidates[index + 1] = true;
+                }
+                if chunk.active_edges & EDGE_SOUTH != 0 && chunk_y + 1 < self.current.chunks_high {
+                    self.candidates[index + self.current.chunks_wide] = true;
+                }
+                if chunk.active_edges & EDGE_WEST != 0 && chunk_x > 0 {
+                    self.candidates[index - 1] = true;
+                }
+            }
+        }
+    }
+
+    fn fill_halo(&mut self, chunk_x: usize, chunk_y: usize) {
+        self.halo.fill(State::QUIESCENT);
+        let copy_chunk = |halo: &mut [State], chunk: &Chunk, width: usize, height: usize| {
+            for local_y in 0..height {
+                let source = local_y * CHUNK_SIDE;
+                let target = (local_y + 1) * HALO_SIDE + 1;
+                halo[target..target + width].copy_from_slice(&chunk.cells[source..source + width]);
+            }
+        };
+        let center_index = self.current.chunk_index(chunk_x, chunk_y);
+        let valid_width = self.current.valid_chunk_width(chunk_x);
+        let valid_height = self.current.valid_chunk_height(chunk_y);
+        if let Some(center) = self.current.chunks[center_index].as_ref() {
+            copy_chunk(&mut self.halo, center, valid_width, valid_height);
+        }
+        if chunk_y > 0 {
+            let north_index = center_index - self.current.chunks_wide;
+            if let Some(north) = self.current.chunks[north_index].as_ref() {
+                let source_row = (CHUNK_SIDE - 1) * CHUNK_SIDE;
+                self.halo[1..1 + valid_width]
+                    .copy_from_slice(&north.cells[source_row..source_row + valid_width]);
+            }
+        }
+        if chunk_y + 1 < self.current.chunks_high {
+            let south_index = center_index + self.current.chunks_wide;
+            if let Some(south) = self.current.chunks[south_index].as_ref() {
+                let target = (valid_height + 1) * HALO_SIDE + 1;
+                self.halo[target..target + valid_width]
+                    .copy_from_slice(&south.cells[..valid_width]);
+            }
+        }
+        if chunk_x > 0 {
+            let west_index = center_index - 1;
+            if let Some(west) = self.current.chunks[west_index].as_ref() {
+                for local_y in 0..valid_height {
+                    self.halo[(local_y + 1) * HALO_SIDE] =
+                        west.cells[local_y * CHUNK_SIDE + CHUNK_SIDE - 1];
+                }
+            }
+        }
+        if chunk_x + 1 < self.current.chunks_wide {
+            let east_index = center_index + 1;
+            if let Some(east) = self.current.chunks[east_index].as_ref() {
+                for local_y in 0..valid_height {
+                    self.halo[(local_y + 1) * HALO_SIDE + valid_width + 1] =
+                        east.cells[local_y * CHUNK_SIDE];
+                }
+            }
+        }
+    }
+
+    fn empty_chunk_cells(&mut self) -> Box<[State]> {
+        let mut cells = self
+            .chunk_pool
+            .pop()
+            .unwrap_or_else(|| vec![State::QUIESCENT; CHUNK_AREA].into_boxed_slice());
+        cells.fill(State::QUIESCENT);
+        cells
+    }
+
+    fn evaluate_chunk<R: LocalRule + ?Sized>(&mut self, rule: &R, chunk_index: usize) -> usize {
+        let chunk_x = chunk_index % self.current.chunks_wide;
+        let chunk_y = chunk_index / self.current.chunks_wide;
+        let valid_width = self.current.valid_chunk_width(chunk_x);
+        let valid_height = self.current.valid_chunk_height(chunk_y);
+        self.fill_halo(chunk_x, chunk_y);
+        let mut chunk = Chunk::empty(self.empty_chunk_cells());
+        for local_y in 0..valid_height {
+            for local_x in 0..valid_width {
+                let halo_index = (local_y + 1) * HALO_SIDE + local_x + 1;
+                let next = rule.next_state(Neighborhood {
+                    center: self.halo[halo_index],
+                    north: self.halo[halo_index - HALO_SIDE],
+                    east: self.halo[halo_index + 1],
+                    south: self.halo[halo_index + HALO_SIDE],
+                    west: self.halo[halo_index - 1],
+                });
+                chunk.cells[local_y * CHUNK_SIDE + local_x] = next;
+                if next != State::QUIESCENT {
+                    chunk.active_cell_count += 1;
+                    chunk.active_edges |= edge_bits(local_x, local_y);
+                }
+            }
+        }
+        if chunk.active_cell_count == 0 {
+            self.chunk_pool.push(chunk.cells);
+        } else {
+            self.next.active_cell_count += chunk.active_cell_count;
+            self.next.chunks[chunk_index] = Some(chunk);
+        }
+        valid_width * valid_height
+    }
+
+    fn step_ordered<R: LocalRule + ?Sized>(&mut self, rule: &R, reverse: bool) -> ChunkStepStats {
+        assert_quiescent_background(rule);
+        self.recycle_next();
+        self.mark_candidates();
+        let active_before = self.current.active_cell_count;
+        let mut cell_evaluations = 0usize;
+        let mut chunk_evaluations = 0usize;
+        if reverse {
+            for chunk_index in (0..self.candidates.len()).rev() {
+                if self.candidates[chunk_index] {
+                    cell_evaluations += self.evaluate_chunk(rule, chunk_index);
+                    chunk_evaluations += 1;
+                }
+            }
+        } else {
+            for chunk_index in 0..self.candidates.len() {
+                if self.candidates[chunk_index] {
+                    cell_evaluations += self.evaluate_chunk(rule, chunk_index);
+                    chunk_evaluations += 1;
+                }
+            }
+        }
+        std::mem::swap(&mut self.current, &mut self.next);
+        ChunkStepStats {
+            step: StepStats {
+                active_cells_before_step: active_before,
+                cell_evaluations,
+            },
+            chunk_evaluations,
+            allocated_chunks_after_step: self.current.allocated_chunk_count(),
+        }
+    }
+
+    pub fn step<R: LocalRule + ?Sized>(&mut self, rule: &R) -> ChunkStepStats {
+        self.step_ordered(rule, false)
+    }
+
+    pub fn grid(&self) -> &ChunkedGrid {
+        &self.current
+    }
+
+    pub fn logical_storage_bytes(&self) -> usize {
+        self.current.logical_storage_bytes()
+            + self.next.logical_storage_bytes()
+            + self.chunk_pool.capacity() * std::mem::size_of::<Box<[State]>>()
+            + self.chunk_pool.len() * CHUNK_AREA * std::mem::size_of::<State>()
+            + self.candidates.capacity() * std::mem::size_of::<bool>()
+            + self.halo.capacity() * std::mem::size_of::<State>()
+    }
+
+    pub fn into_grid(self) -> ChunkedGrid {
+        self.current
+    }
+}
+
+#[cfg(test)]
+mod chunked_tests {
+    use super::*;
+
+    #[test]
+    fn candidate_traversal_order_does_not_change_output() {
+        let rule = LangtonRule::canonical().unwrap();
+        let mut dense = DenseGrid::new(97, 71).unwrap();
+        for (x, y, state) in [
+            (0, 0, 1),
+            (31, 16, 2),
+            (32, 16, 3),
+            (63, 32, 4),
+            (64, 32, 5),
+            (96, 70, 7),
+        ] {
+            dense.set(x, y, State::try_from(state).unwrap()).unwrap();
+        }
+        let initial = ChunkedGrid::from_dense(&dense);
+        let mut forward = ChunkedRunner::new(initial.clone());
+        let mut reverse = ChunkedRunner::new(initial);
+        forward.step_ordered(&rule, false);
+        reverse.step_ordered(&rule, true);
+        assert_eq!(forward.grid().to_dense(), reverse.grid().to_dense());
     }
 }
 
