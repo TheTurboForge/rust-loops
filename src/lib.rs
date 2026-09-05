@@ -10,6 +10,9 @@ pub const CANONICAL_STATE_COUNT: u8 = 8;
 pub const CANONICAL_COORDINATE_BASIS: &str = "Golly RLE active-bounds origin";
 pub const BYL_STATE_COUNT: u8 = 6;
 pub const BYL_COORDINATE_BASIS: &str = "active-bounds origin";
+pub const SDSR_STATE_COUNT: u8 = 9;
+pub const SDSR_COORDINATE_BASIS: &str = "active-bounds origin";
+pub const MAX_SUPPORTED_STATE_COUNT: u8 = SDSR_STATE_COUNT;
 pub const CHUNK_SIDE: usize = 32;
 const CHUNK_AREA: usize = CHUNK_SIDE * CHUNK_SIDE;
 const HALO_SIDE: usize = CHUNK_SIDE + 2;
@@ -28,7 +31,7 @@ impl fmt::Display for StateError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             formatter,
-            "state {} is outside canonical range 0..=7",
+            "state {} is outside supported range 0..=8",
             self.0
         )
     }
@@ -40,7 +43,7 @@ impl TryFrom<u8> for State {
     type Error = StateError;
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        if value < CANONICAL_STATE_COUNT {
+        if value < MAX_SUPPORTED_STATE_COUNT {
             Ok(Self(value))
         } else {
             Err(StateError(value))
@@ -75,12 +78,21 @@ impl Neighborhood {
         }
     }
 
-    fn lookup_index(self) -> usize {
-        ((((usize::from(self.center.value()) * 8 + usize::from(self.north.value())) * 8
+    fn lookup_index(self, state_count: u8) -> usize {
+        for state in [self.center, self.north, self.east, self.south, self.west] {
+            assert!(
+                state.value() < state_count,
+                "state {} is outside rule profile range 0..={}",
+                state.value(),
+                state_count - 1
+            );
+        }
+        let radix = usize::from(state_count);
+        ((((usize::from(self.center.value()) * radix + usize::from(self.north.value())) * radix
             + usize::from(self.east.value()))
-            * 8
+            * radix
             + usize::from(self.south.value()))
-            * 8)
+            * radix)
             + usize::from(self.west.value())
     }
 }
@@ -94,6 +106,7 @@ pub trait LocalRule {
 #[derive(Clone, Debug)]
 struct TransitionLookup {
     lookup: Box<[State]>,
+    state_count: u8,
     expanded_transition_count: usize,
 }
 
@@ -104,6 +117,11 @@ pub struct LangtonRule {
 
 #[derive(Clone, Debug)]
 pub struct BylRule {
+    transitions: TransitionLookup,
+}
+
+#[derive(Clone, Debug)]
+pub struct SdsrRule {
     transitions: TransitionLookup,
 }
 
@@ -127,6 +145,19 @@ pub enum RuleError {
         state_count: u8,
     },
     NonQuiescentBackground(State),
+    InvalidDirectLookupLength {
+        expected: usize,
+        actual: usize,
+    },
+    InvalidDirectLookupState {
+        index: usize,
+        state: u8,
+    },
+    FixtureHashMismatch {
+        fixture: &'static str,
+        expected: &'static str,
+        actual: String,
+    },
     Parse(String),
 }
 
@@ -189,7 +220,7 @@ impl LangtonRule {
 
 impl LocalRule for LangtonRule {
     fn next_state(&self, neighborhood: Neighborhood) -> State {
-        self.transitions.lookup[neighborhood.lookup_index()]
+        self.transitions.next_state(neighborhood)
     }
 
     fn state_count(&self) -> u8 {
@@ -239,20 +270,7 @@ impl BylRule {
 
 impl LocalRule for BylRule {
     fn next_state(&self, neighborhood: Neighborhood) -> State {
-        for state in [
-            neighborhood.center,
-            neighborhood.north,
-            neighborhood.east,
-            neighborhood.south,
-            neighborhood.west,
-        ] {
-            assert!(
-                state.value() < BYL_STATE_COUNT,
-                "state {} is outside Byl profile range 0..=5",
-                state.value()
-            );
-        }
-        self.transitions.lookup[neighborhood.lookup_index()]
+        self.transitions.next_state(neighborhood)
     }
 
     fn state_count(&self) -> u8 {
@@ -264,7 +282,53 @@ impl LocalRule for BylRule {
     }
 }
 
+impl SdsrRule {
+    pub const LOOKUP_SHA256: &'static str =
+        "7c04d923b7569fdcaaa0889ed6e32c0efb8c5b44c83f0732bad534f7617ff974";
+
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let bytes = include_bytes!("../data/sdsr-golly-3.3/lookup-base9-cnesw.bin");
+        let actual = format!("{:x}", Sha256::digest(bytes));
+        if actual != Self::LOOKUP_SHA256 {
+            return Err(RuleError::FixtureHashMismatch {
+                fixture: "SDSR direct lookup",
+                expected: Self::LOOKUP_SHA256,
+                actual,
+            });
+        }
+        Ok(Self {
+            transitions: TransitionLookup::from_direct_lookup(bytes, SDSR_STATE_COUNT)?,
+        })
+    }
+
+    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
+        LocalRule::next_state(self, neighborhood)
+    }
+
+    pub fn direct_transition_count(&self) -> usize {
+        self.transitions.lookup.len()
+    }
+}
+
+impl LocalRule for SdsrRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        self.transitions.next_state(neighborhood)
+    }
+
+    fn state_count(&self) -> u8 {
+        SDSR_STATE_COUNT
+    }
+
+    fn coordinate_basis(&self) -> &'static str {
+        SDSR_COORDINATE_BASIS
+    }
+}
+
 impl TransitionLookup {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        self.lookup[neighborhood.lookup_index(self.state_count)]
+    }
+
     fn from_base_transitions(
         transitions: Vec<(Neighborhood, State)>,
         state_count: u8,
@@ -305,21 +369,51 @@ impl TransitionLookup {
                 rotated = rotated.clockwise();
             }
         }
-        let mut lookup = (0..8usize.pow(5))
+        let radix = usize::from(state_count);
+        let mut lookup = (0..radix.pow(5))
             .map(|index| {
-                let center = State((index / 8usize.pow(4)) as u8);
+                let center = State((index / radix.pow(4)) as u8);
                 fallback(center)
             })
             .collect::<Vec<_>>();
         for (neighborhood, next) in &expanded {
-            lookup[neighborhood.lookup_index()] = *next;
+            lookup[neighborhood.lookup_index(state_count)] = *next;
         }
         if lookup[0] != State::QUIESCENT {
             return Err(RuleError::NonQuiescentBackground(lookup[0]));
         }
         Ok(Self {
             lookup: lookup.into_boxed_slice(),
+            state_count,
             expanded_transition_count: expanded.len(),
+        })
+    }
+
+    fn from_direct_lookup(bytes: &[u8], state_count: u8) -> Result<Self, RuleError> {
+        let expected = usize::from(state_count).pow(5);
+        if bytes.len() != expected {
+            return Err(RuleError::InvalidDirectLookupLength {
+                expected,
+                actual: bytes.len(),
+            });
+        }
+        let mut lookup = Vec::with_capacity(bytes.len());
+        for (index, value) in bytes.iter().copied().enumerate() {
+            if value >= state_count {
+                return Err(RuleError::InvalidDirectLookupState {
+                    index,
+                    state: value,
+                });
+            }
+            lookup.push(State(value));
+        }
+        if lookup[0] != State::QUIESCENT {
+            return Err(RuleError::NonQuiescentBackground(lookup[0]));
+        }
+        Ok(Self {
+            lookup: lookup.into_boxed_slice(),
+            state_count,
+            expanded_transition_count: 0,
         })
     }
 }
@@ -646,6 +740,16 @@ impl SparseFrontierGrid {
         }
         grid
     }
+
+    pub fn state_equals_dense(&self, dense: &DenseGrid) -> bool {
+        self.width == dense.width
+            && self.height == dense.height
+            && self.cells.len() == dense.active_cell_count()
+            && self
+                .cells
+                .iter()
+                .all(|(index, state)| dense.cells[*index] == *state)
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -804,6 +908,35 @@ impl ChunkedGrid {
             }
         }
         grid
+    }
+
+    pub fn state_equals_dense(&self, dense: &DenseGrid) -> bool {
+        if self.width != dense.width
+            || self.height != dense.height
+            || self.active_cell_count != dense.active_cell_count()
+        {
+            return false;
+        }
+        self.chunks
+            .iter()
+            .enumerate()
+            .filter_map(|(index, chunk)| chunk.as_ref().map(|chunk| (index, chunk)))
+            .all(|(chunk_index, chunk)| {
+                let chunk_x = chunk_index % self.chunks_wide;
+                let chunk_y = chunk_index / self.chunks_wide;
+                let valid_width = self.valid_chunk_width(chunk_x);
+                let valid_height = self.valid_chunk_height(chunk_y);
+                (0..valid_height).all(|local_y| {
+                    (0..valid_width).all(|local_x| {
+                        let state = chunk.cells[local_y * CHUNK_SIDE + local_x];
+                        state == State::QUIESCENT
+                            || dense.cells[(chunk_y * CHUNK_SIDE + local_y) * dense.width
+                                + chunk_x * CHUNK_SIDE
+                                + local_x]
+                                == state
+                    })
+                })
+            })
     }
 }
 
@@ -1044,6 +1177,34 @@ mod chunked_tests {
         reverse.step_ordered(&rule, true);
         assert_eq!(forward.grid().to_dense(), reverse.grid().to_dense());
     }
+
+    #[test]
+    fn direct_lookup_rejects_wrong_length_invalid_states_and_active_background() {
+        assert_eq!(
+            TransitionLookup::from_direct_lookup(&[0; 8], SDSR_STATE_COUNT).unwrap_err(),
+            RuleError::InvalidDirectLookupLength {
+                expected: 9usize.pow(5),
+                actual: 8,
+            }
+        );
+
+        let mut lookup = vec![0; 9usize.pow(5)];
+        lookup[123] = 9;
+        assert_eq!(
+            TransitionLookup::from_direct_lookup(&lookup, SDSR_STATE_COUNT).unwrap_err(),
+            RuleError::InvalidDirectLookupState {
+                index: 123,
+                state: 9,
+            }
+        );
+
+        lookup[123] = 0;
+        lookup[0] = 1;
+        assert_eq!(
+            TransitionLookup::from_direct_lookup(&lookup, SDSR_STATE_COUNT).unwrap_err(),
+            RuleError::NonQuiescentBackground(State::try_from(1).unwrap())
+        );
+    }
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -1122,6 +1283,13 @@ pub struct BylSeed {
     cells: Vec<Cell>,
 }
 
+#[derive(Clone, Debug)]
+pub struct SdsrSeed {
+    width: usize,
+    height: usize,
+    cells: Vec<Cell>,
+}
+
 impl BylSeed {
     pub fn golly_3_3_profile() -> Result<Self, RuleError> {
         let document: SeedDocument =
@@ -1187,6 +1355,82 @@ impl BylSeed {
     }
 }
 
+impl SdsrSeed {
+    pub const SEED_SHA256: &'static str =
+        "78791df428bb76213eaff5328a1b8649a3aff45a9700922b5ad1c8825aab1488";
+
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let bytes = include_bytes!("../data/sdsr-golly-3.3/seed.json");
+        let actual = format!("{:x}", Sha256::digest(bytes));
+        if actual != Self::SEED_SHA256 {
+            return Err(RuleError::FixtureHashMismatch {
+                fixture: "SDSR seed",
+                expected: Self::SEED_SHA256,
+                actual,
+            });
+        }
+        let document: SeedDocument =
+            serde_json::from_slice(bytes).map_err(|error| RuleError::Parse(error.to_string()))?;
+        if document.width != 15 || document.height != 10 || document.cells.len() != 86 {
+            return Err(RuleError::Parse("SDSR seed invariants failed".into()));
+        }
+        let mut states = BTreeSet::new();
+        let mut positions = BTreeSet::new();
+        for cell in &document.cells {
+            State::try_from(cell.state).map_err(|error| RuleError::InvalidState(error.0))?;
+            if cell.state == 0
+                || cell.state >= SDSR_STATE_COUNT
+                || cell.x >= document.width
+                || cell.y >= document.height
+                || !positions.insert((cell.x, cell.y))
+            {
+                return Err(RuleError::Parse("invalid SDSR seed cell".into()));
+            }
+            states.insert(cell.state);
+        }
+        if states != BTreeSet::from([1, 2, 4, 7]) {
+            return Err(RuleError::Parse(
+                "unexpected SDSR seed state signature".into(),
+            ));
+        }
+        Ok(Self {
+            width: document.width,
+            height: document.height,
+            cells: document.cells,
+        })
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.cells.len()
+    }
+
+    pub fn dimensions(&self) -> (usize, usize) {
+        (self.width, self.height)
+    }
+
+    pub fn place_in(
+        &self,
+        width: usize,
+        height: usize,
+        origin_x: usize,
+        origin_y: usize,
+    ) -> Result<DenseGrid, GridError> {
+        let mut grid = DenseGrid::new(width, height)?;
+        for cell in &self.cells {
+            grid.set(
+                origin_x
+                    .checked_add(cell.x)
+                    .ok_or(GridError::InvalidDimensions)?,
+                origin_y
+                    .checked_add(cell.y)
+                    .ok_or(GridError::InvalidDimensions)?,
+                State::try_from(cell.state).expect("validated SDSR seed"),
+            )?;
+        }
+        Ok(grid)
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Snapshot {
     pub active_cell_count: usize,
@@ -1234,7 +1478,7 @@ impl Snapshot {
         state_count: u8,
         coordinate_basis: &str,
     ) -> Self {
-        assert!((2..=CANONICAL_STATE_COUNT).contains(&state_count));
+        assert!((2..=MAX_SUPPORTED_STATE_COUNT).contains(&state_count));
         assert!(
             grid.cells.iter().all(|state| state.value() < state_count),
             "grid contains a state outside the selected rule profile"
@@ -1350,6 +1594,27 @@ pub fn verify_byl_golly_profile(generation: u64, expected: &Snapshot) -> Result<
     } else {
         Err(format!(
             "Byl Golly 3.3 profile mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
+            expected.state_hash_sha256,
+            actual.state_hash_sha256,
+            expected.active_cell_count,
+            actual.active_cell_count
+        ))
+    }
+}
+
+pub fn verify_sdsr_golly_profile(generation: u64, expected: &Snapshot) -> Result<(), String> {
+    let rule = SdsrRule::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let seed = SdsrSeed::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let grid = seed
+        .place_in(768, 768, 256, 256)
+        .map_err(|error| error.to_string())?;
+    let chunked = ChunkedGrid::from_dense(&grid).run(&rule, generation);
+    let actual = Snapshot::from_grid_for_rule(&chunked.to_dense(), generation, &rule);
+    if actual == *expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "SDSR Golly 3.3 profile mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
             expected.state_hash_sha256,
             actual.state_hash_sha256,
             expected.active_cell_count,

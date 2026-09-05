@@ -1,6 +1,7 @@
 # Provenance and Attribution
 
-`data/langton/`, `data/byl-golly-3.3/`, and `data/benchmark/` are
+`data/langton/`, `data/byl-golly-3.3/`, `data/sdsr-golly-3.3/`, and
+`data/benchmark/` are
 project-authored normalized representations of transition, seed,
 reference-state, and deterministic benchmark-control data. They are used as
 executable fixture data by this GPL-3.0-or-later project; they do not
@@ -21,8 +22,16 @@ Sources consulted and recorded in the private research archive:
 - Golly Rule Table Repository, `Byl-Loop.table`, pinned commit
   `3646a185c6049180980de2989b27662a10bb3b86`.
 - Golly 3.3-1build1 packaged `Byl-Loop` rule and seed.
+- H. Sayama, “Introduction of Structural Dissolution into Langton's
+  Self-Reproducing Loop,” *Artificial Life VI*, 1998.
+- H. Sayama's archived SDSR/Evoloop Java implementation by Andrew Bachmutsky.
+- Golly Rule Table Repository, `SDSR-Loop.table`, pinned commit
+  `3646a185c6049180980de2989b27662a10bb3b86`.
+- Golly 3.3-1build1 packaged `SDSR-Loop` rule and seed.
 
 The normalized fixture content hashes and the independently executed Golly 3.3
 trajectory hashes are documented in `data/README.md`. The Byl paper/table
-discrepancy is retained explicitly rather than resolved by assumption. Raw
-evidence remains private and is not part of this repository.
+discrepancy is retained explicitly rather than resolved by assumption. The
+SDSR direct function was independently reconciled across three executable
+channels before normalization. Raw evidence remains private and is not part of
+this repository.

@@ -2,7 +2,7 @@
 
 `rust-loops` is a Rust laboratory for cellular automata, Artificial Life, and
 local persistent computation. Its first executable artifacts are deliberately
-small, independently verified Langton and Byl loop calibration profiles.
+small, independently verified Langton, Byl, and SDSR loop calibration profiles.
 
 The long-term research question is whether artificial substrates built from
 cheap local interactions can support learning or evolution that discovers
@@ -10,7 +10,7 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository has completed two independent loop-family correctness gates and
+The repository has completed three independent loop-family correctness gates and
 its first substrate-characterization cycles. It is not yet a general CA
 framework, a viewer, a performance claim, or a learning/evolution system.
 
@@ -54,6 +54,7 @@ See [Concepts](docs/concepts.md), [Loop family](docs/loop-family.md),
 ```sh
 cargo run --bin rust-loops -- --generations 151
 cargo run --bin rust-loops -- --rule byl-golly-3.3 --generations 25
+cargo run --bin rust-loops -- --rule sdsr-golly-3.3 --generations 151
 cargo test
 ```
 
@@ -79,25 +80,34 @@ and the table needed to reproduce its printed trajectory do not fully agree.
 The project preserves that conflict; it does not synthesize an undocumented
 resolution.
 
+The nine-state `sdsr-golly-3.3` profile adds structural dissolution state `8`.
+Its complete 59,049-entry direct function agrees across three archived
+executable channels, and Rust matches independently executed Golly snapshots
+through generation 2,000. That establishes the named transition profile and
+trajectory; causal dissolution and recovery claims remain a separate
+intervention gate.
+
 ## Current Status
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
-  Langton and Byl rule/seed fixtures, and Golly differential tests are present.
+  Langton, Byl, and SDSR rule/seed fixtures, and Golly differential tests are
+  present.
 - Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
 - `benchmark` is a single-threaded CPU JSONL harness for exact dense,
   sparse-frontier, and explicit `32×32` chunked representations under either
-  verified rule profile. Schema version 4 emits timing, provenance, exact
-  output hashes, actual activity/locality, logical capacity, fixture-owned
-  process-RSS deltas, update counts, and explicit counter/energy status; it
-  makes no efficiency claim.
+  benchmark-enabled Langton or Byl profile. Schema version 4 emits timing,
+  provenance, exact output hashes, actual activity/locality, logical capacity,
+  fixture-owned process-RSS deltas, update counts, and explicit counter/energy
+  status; it makes no efficiency claim.
 - The first chunked candidate was killed under its preregistered aggregate
   timeout gate. A second rule-generic candidate passed a separately
   preregistered private cross-rule gate and is retained only as an explicit
   manually selected option for localized `512²/2048²` workloads. Dense remains
   the declared high-density choice; no automatic dispatcher exists.
-- The Langton generation-151 and Byl generation-25 reference trajectories are
-  independently frozen and checked in the private research archive.
-- UI, GPU execution, parallelism, and additional rule families remain
+- The Langton generation-151, Byl generation-25, and SDSR-through-2,000
+  reference trajectories are independently frozen and checked in the private
+  research archive.
+- UI, GPU execution, parallelism, and further rule families remain
   intentionally deferred.
 
 ## Licensing And Provenance

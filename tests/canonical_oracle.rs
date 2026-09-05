@@ -32,7 +32,8 @@ fn canonical_seed_is_complete_and_fits() {
 #[test]
 fn state_validation_rejects_out_of_range_values() {
     assert!(State::try_from(7).is_ok());
-    assert!(State::try_from(8).is_err());
+    assert!(State::try_from(8).is_ok());
+    assert!(State::try_from(9).is_err());
 }
 
 #[test]

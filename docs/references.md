@@ -20,7 +20,8 @@
   self-reproducing universal computer,” 1996:
   <https://doi.org/10.1016/0167-2789(96)00091-7>
 - H. Sayama, “Introduction of Structural Dissolution into Langton's
-  Self-Reproducing Loop,” 1998.
+  Self-Reproducing Loop,” 1998; archived implementation materials:
+  <https://bingdev.binghamton.edu/sayama/sdsr/java/>.
 - H. Sayama, Evoloop research and source materials:
   <https://necsi.edu/spontaneous-evolution-of-self-reproducing-loops-on-cellular-automata>
 - N. Oros and C. L. Nehaniv, “Sexyloop: Self-Reproduction, Evolution and Sex

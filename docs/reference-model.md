@@ -90,8 +90,25 @@ holds occupancy constant; it is not a scientific loop profile.
 The historical first chunked candidate was killed by aggregate timeouts. Its
 raw negative evidence remains valid and is not overwritten by the narrower
 per-process cross-rule result. No automatic representation dispatcher exists;
-one would require evidence beyond two rule profiles and a declared selection
-policy.
+one would require a separately preregistered selection policy and evidence
+across structurally different workloads, not merely another related loop rule.
+
+## SDSR Golly 3.3 Executable-Reference Profile
+
+- Nine states numbered `0` through `8`, with state `8` used for structural
+  dissolution.
+- Center/north/east/south/west neighborhoods, synchronous generations,
+  fourfold rotational rule-table semantics, and quiescent state `0`.
+- A complete base-9 direct function of 59,049 neighborhoods rather than an
+  implicit wildcard implementation.
+- The canonical `15×10`, 86-active-cell Langton seed.
+
+Archived Bachmutsky Java, pinned maintained rule tables, and Golly 3.3 expand
+to the same direct function. The public Rust runner matches independently
+executed Golly snapshots at generations `0`, `1`, `151`, `302`, `1,000`, and
+`2,000`. The profile retains ordinary reproduction, but exactness is not itself
+evidence that dissolution causes recovery. Obstruction, deletion, and collision
+interventions are evaluated separately against a declared extended-SR control.
 
 ## Experiment Metadata
 

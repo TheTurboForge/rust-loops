@@ -1,7 +1,10 @@
 use std::env;
 use std::process::ExitCode;
 
-use rust_loops::{BylRule, BylSeed, CanonicalSeed, DenseGrid, LangtonRule, LocalRule, Snapshot};
+use rust_loops::{
+    BylRule, BylSeed, CanonicalSeed, DenseGrid, LangtonRule, LocalRule, SdsrRule, SdsrSeed,
+    Snapshot,
+};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -17,7 +20,7 @@ struct RunOutput {
 }
 
 fn usage() -> &'static str {
-    "usage: rust-loops --generations <N> [--rule langton|byl-golly-3.3] [--width <N> --height <N> --origin-x <N> --origin-y <N>]"
+    "usage: rust-loops --generations <N> [--rule langton|byl-golly-3.3|sdsr-golly-3.3] [--width <N> --height <N> --origin-x <N> --origin-y <N>]"
 }
 
 fn run_profile<R: LocalRule>(grid: DenseGrid, rule: &R, generations: u64) -> Snapshot {
@@ -39,6 +42,7 @@ fn main() -> ExitCode {
                 rule_profile = match arguments.next().as_deref() {
                     Some("langton") => "langton",
                     Some("byl-golly-3.3") => "byl-golly-3.3",
+                    Some("sdsr-golly-3.3") => "sdsr-golly-3.3",
                     _ => {
                         eprintln!("{}", usage());
                         return ExitCode::from(2);
@@ -132,6 +136,19 @@ fn main() -> ExitCode {
                     "byl-1989-golly-3.3-executable-reference",
                     "8813815e3af17aa71ce351bfa69358b3eb64ecf38eb44f739142e3f4595d84be",
                     "0854641da00edc65974ac7a79d79b7c5fabf171946bffdbf1b0ba38a9662892f",
+                    run_profile(grid, &rule, generations),
+                )
+            }
+            "sdsr-golly-3.3" => {
+                let rule = SdsrRule::golly_3_3_profile().map_err(|error| error.to_string())?;
+                let seed = SdsrSeed::golly_3_3_profile().map_err(|error| error.to_string())?;
+                let grid = seed
+                    .place_in(width, height, origin_x, origin_y)
+                    .map_err(|error| error.to_string())?;
+                (
+                    "sdsr-golly-3.3-executable-reference",
+                    SdsrRule::LOOKUP_SHA256,
+                    SdsrSeed::SEED_SHA256,
                     run_profile(grid, &rule, generations),
                 )
             }

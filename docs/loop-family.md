@@ -22,3 +22,9 @@ does not. The conflicting sources remain separately identified.
 
 Variants will be implemented as separate named rule packages with their own
 sources, seeds, update semantics, and verification oracles.
+
+The implemented `sdsr-golly-3.3` package follows that rule: its nine-state
+direct function is exact to three mutually agreeing executable sources and six
+independent trajectory milestones through generation 2,000. The project does
+not promote structural dissolution to a self-repair claim until controlled
+interventions pass.

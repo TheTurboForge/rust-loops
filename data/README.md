@@ -26,6 +26,20 @@ license with the provenance notice in `../NOTICE.md`.
   generations `0` through `27`, plus generation `50`; SHA-256
   `92618fc55b8399a79eb8ea5f27fbbd4f97153b0d34506d6542b936743f5a880a`.
   Each trajectory was executed twice before freezing.
+- `sdsr-golly-3.3/lookup-base9-cnesw.bin`: the complete project-normalized
+  nine-state SDSR direct function in base-9 center/north/east/south/west
+  order; SHA-256
+  `7c04d923b7569fdcaaa0889ed6e32c0efb8c5b44c83f0732bad534f7617ff974`.
+  Its 59,049 entries agree independently with archived Bachmutsky Java,
+  maintained rule-table commit `3646a185c6049180980de2989b27662a10bb3b86`,
+  and the Golly 3.3 package.
+- `sdsr-golly-3.3/seed.json`: the `15×10`, 86-cell executable-reference
+  seed; SHA-256
+  `78791df428bb76213eaff5328a1b8649a3aff45a9700922b5ad1c8825aab1488`.
+- `sdsr-golly-3.3/oracles-golly-3.3.json`: normalized snapshots at
+  generations `0`, `1`, `151`, `302`, `1,000`, and `2,000`; SHA-256
+  `c7c636330afeb2d7a708b619234663bd327020196889a441898f0654b1f2c37b`.
+  Every source trajectory was executed twice before freezing.
 - `benchmark/identity-rule.json`: the project-authored stable-occupancy
   identity-control specification; SHA-256
   `e62113ac6654662762d93e3ab5ea38f5e7d6501a5477a2eff9df1187d4728736`.
@@ -43,6 +57,12 @@ six default rules. A direct transcription of that table diverges from the
 paper's own Figure 3 at generation 1. The pinned Golly table instead matches
 all 28 printed Figure 3 configurations exactly. These sources are not silently
 merged into a supposedly canonical table.
+
+The SDSR fixture is likewise named as an executable-reference profile. The
+complete direct function is published instead of the raw Java, Golly rule,
+or package files, which remain private evidence. State `8` is the added
+structural-dissolution state. Exact trajectory agreement alone does not prove
+general self-repair or evolvability; those require separate interventions.
 
 The public fixture set intentionally excludes raw papers, Golly package bytes,
 Golly rule/RLE source files, and rendered images.
