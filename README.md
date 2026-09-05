@@ -2,7 +2,8 @@
 
 `rust-loops` is a Rust laboratory for cellular automata, Artificial Life, and
 local persistent computation. Its first executable artifacts are deliberately
-small, independently verified Langton, Byl, and SDSR loop calibration profiles.
+small, independently verified Langton, Byl, SDSR, and Evoloop calibration
+profiles.
 
 The long-term research question is whether artificial substrates built from
 cheap local interactions can support learning or evolution that discovers
@@ -10,8 +11,8 @@ increasingly capable information processing—and whether that computation can
 be fundamentally more efficient than today's globally communicating neural
 architectures.
 
-The repository has completed three independent loop-family correctness gates and
-its first substrate-characterization cycles. It is not yet a general CA
+The repository has completed four independent loop-profile correctness gates
+and its first substrate-characterization cycles. It is not yet a general CA
 framework, a viewer, a performance claim, or a learning/evolution system.
 
 ## Intended First Milestone
@@ -55,11 +56,15 @@ See [Concepts](docs/concepts.md), [Loop family](docs/loop-family.md),
 cargo run --bin rust-loops -- --generations 151
 cargo run --bin rust-loops -- --rule byl-golly-3.3 --generations 25
 cargo run --bin rust-loops -- --rule sdsr-golly-3.3 --generations 151
+cargo run --release --bin rust-loops -- --rule evoloop-golly-3.3 \
+  --boundary toroidal --width 200 --height 200 --origin-x 92 --origin-y 92 \
+  --generations 5000
 cargo test
 ```
 
-The command emits a normalized active-cell snapshot with population, bounds,
-generation, and a SHA-256 state-set hash. The integration suite compares
+The command emits either a finite normalized snapshot or an explicitly
+toroidal absolute snapshot with population, generation, and a SHA-256 state
+hash. The integration suite compares
 generations `0`, `1`, `25`, `75`, and `151` exactly against fixtures generated
 by Golly 3.3's headless `bgolly` RuleLoader executor. The reference fixtures
 are normalized state data, not raw Golly assets.
@@ -87,11 +92,19 @@ through generation 2,000. That establishes the named transition profile and
 trajectory; causal dissolution and recovery claims remain a separate
 intervention gate.
 
+The nine-state `evoloop-golly-3.3` profile uses a 149-cell 2-Evoloop species-13
+seed. Fixed-quiescent Rust execution matches independently run Golly through
+generation 2,000. The explicit dense toroidal runner matches absolute Golly
+states in a `200×200` world at every frozen milestone through generation
+50,000. Boundary selection is explicit; existing finite-grid APIs remain
+quiescent and never switch topology implicitly. Evolutionary interpretation is
+a separate observer-and-controls gate.
+
 ## Current Status
 
 - GPL-3.0-or-later Cargo workspace, bounded dense engine, CLI, normalized
-  Langton, Byl, and SDSR rule/seed fixtures, and Golly differential tests are
-  present.
+  Langton, Byl, SDSR, and Evoloop rule/seed fixtures, and Golly differential
+  tests are present.
 - Rust `1.97.0`, Rustfmt, and Clippy are pinned for reproducible checks.
 - `benchmark` is a single-threaded CPU JSONL harness for exact dense,
   sparse-frontier, and explicit `32×32` chunked representations under either
@@ -104,9 +117,9 @@ intervention gate.
   preregistered private cross-rule gate and is retained only as an explicit
   manually selected option for localized `512²/2048²` workloads. Dense remains
   the declared high-density choice; no automatic dispatcher exists.
-- The Langton generation-151, Byl generation-25, and SDSR-through-2,000
-  reference trajectories are independently frozen and checked in the private
-  research archive.
+- The Langton generation-151, Byl generation-25, SDSR-through-2,000, and
+  periodic Evoloop-through-50,000 reference trajectories are independently
+  frozen and checked in the private research archive.
 - UI, GPU execution, parallelism, and further rule families remain
   intentionally deferred.
 

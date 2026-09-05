@@ -12,6 +12,9 @@ pub const BYL_STATE_COUNT: u8 = 6;
 pub const BYL_COORDINATE_BASIS: &str = "active-bounds origin";
 pub const SDSR_STATE_COUNT: u8 = 9;
 pub const SDSR_COORDINATE_BASIS: &str = "active-bounds origin";
+pub const EVOLOOP_STATE_COUNT: u8 = 9;
+pub const EVOLOOP_COORDINATE_BASIS: &str = "active-bounds origin";
+pub const TOROIDAL_COORDINATE_BASIS: &str = "toroidal row-major origin";
 pub const MAX_SUPPORTED_STATE_COUNT: u8 = SDSR_STATE_COUNT;
 pub const CHUNK_SIDE: usize = 32;
 const CHUNK_AREA: usize = CHUNK_SIDE * CHUNK_SIDE;
@@ -122,6 +125,11 @@ pub struct BylRule {
 
 #[derive(Clone, Debug)]
 pub struct SdsrRule {
+    transitions: TransitionLookup,
+}
+
+#[derive(Clone, Debug)]
+pub struct EvoloopRule {
     transitions: TransitionLookup,
 }
 
@@ -329,6 +337,48 @@ impl LocalRule for SdsrRule {
     }
 }
 
+impl EvoloopRule {
+    pub const LOOKUP_SHA256: &'static str =
+        "f21d18ea8f4fa622ec46e3ef201998df8075aa4961725fbaa361519da9f2f670";
+
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let bytes = include_bytes!("../data/evoloop-golly-3.3/lookup-base9-cnesw.bin");
+        let actual = format!("{:x}", Sha256::digest(bytes));
+        if actual != Self::LOOKUP_SHA256 {
+            return Err(RuleError::FixtureHashMismatch {
+                fixture: "Evoloop direct lookup",
+                expected: Self::LOOKUP_SHA256,
+                actual,
+            });
+        }
+        Ok(Self {
+            transitions: TransitionLookup::from_direct_lookup(bytes, EVOLOOP_STATE_COUNT)?,
+        })
+    }
+
+    pub fn next_state(&self, neighborhood: Neighborhood) -> State {
+        LocalRule::next_state(self, neighborhood)
+    }
+
+    pub fn direct_transition_count(&self) -> usize {
+        self.transitions.lookup.len()
+    }
+}
+
+impl LocalRule for EvoloopRule {
+    fn next_state(&self, neighborhood: Neighborhood) -> State {
+        self.transitions.next_state(neighborhood)
+    }
+
+    fn state_count(&self) -> u8 {
+        EVOLOOP_STATE_COUNT
+    }
+
+    fn coordinate_basis(&self) -> &'static str {
+        EVOLOOP_COORDINATE_BASIS
+    }
+}
+
 impl ExtendedSrControlRule {
     pub fn project_control() -> Result<Self, RuleError> {
         let document: RuleDocument =
@@ -515,6 +565,16 @@ pub struct DenseRunner {
     active_cell_count: usize,
 }
 
+/// Exact synchronous dense runner with periodic horizontal and vertical edges.
+/// This is a separate type so finite quiescent-boundary APIs never change
+/// meaning implicitly.
+#[derive(Clone, Debug)]
+pub struct ToroidalDenseRunner {
+    current: DenseGrid,
+    next: DenseGrid,
+    active_cell_count: usize,
+}
+
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct StepStats {
     pub active_cells_before_step: usize,
@@ -655,6 +715,79 @@ impl DenseRunner {
     pub fn logical_storage_bytes(&self) -> usize {
         (self.current.cells.capacity() + self.next.cells.capacity()) * std::mem::size_of::<State>()
     }
+    pub fn into_grid(self) -> DenseGrid {
+        self.current
+    }
+}
+
+impl ToroidalDenseRunner {
+    pub fn new(current: DenseGrid) -> Self {
+        let active_cell_count = current.active_cell_count();
+        let next =
+            DenseGrid::new(current.width, current.height).expect("existing dimensions are valid");
+        Self {
+            current,
+            next,
+            active_cell_count,
+        }
+    }
+
+    pub fn step<R: LocalRule + ?Sized>(&mut self, rule: &R) -> StepStats {
+        let width = self.current.width;
+        let height = self.current.height;
+        let mut next_active = 0usize;
+        for y in 0..height {
+            let row = y * width;
+            let north_row = if y == 0 {
+                (height - 1) * width
+            } else {
+                row - width
+            };
+            let south_row = if y + 1 == height { 0 } else { row + width };
+            for x in 0..width {
+                let index = row + x;
+                let west_x = if x == 0 { width - 1 } else { x - 1 };
+                let east_x = if x + 1 == width { 0 } else { x + 1 };
+                let next = rule.next_state(Neighborhood {
+                    center: self.current.cells[index],
+                    north: self.current.cells[north_row + x],
+                    east: self.current.cells[row + east_x],
+                    south: self.current.cells[south_row + x],
+                    west: self.current.cells[row + west_x],
+                });
+                next_active += usize::from(next != State::QUIESCENT);
+                self.next.cells[index] = next;
+            }
+        }
+        std::mem::swap(&mut self.current, &mut self.next);
+        let stats = StepStats {
+            active_cells_before_step: self.active_cell_count,
+            cell_evaluations: self.current.cells.len(),
+        };
+        self.active_cell_count = next_active;
+        stats
+    }
+
+    pub fn run<R: LocalRule + ?Sized>(&mut self, rule: &R, generations: u64) -> StepStats {
+        let mut aggregate = StepStats {
+            active_cells_before_step: self.active_cell_count,
+            cell_evaluations: 0,
+        };
+        for _ in 0..generations {
+            let stats = self.step(rule);
+            aggregate.cell_evaluations += stats.cell_evaluations;
+        }
+        aggregate
+    }
+
+    pub fn grid(&self) -> &DenseGrid {
+        &self.current
+    }
+
+    pub fn logical_storage_bytes(&self) -> usize {
+        (self.current.cells.capacity() + self.next.cells.capacity()) * std::mem::size_of::<State>()
+    }
+
     pub fn into_grid(self) -> DenseGrid {
         self.current
     }
@@ -1422,6 +1555,13 @@ pub struct SdsrSeed {
     cells: Vec<Cell>,
 }
 
+#[derive(Clone, Debug)]
+pub struct EvoloopSeed {
+    width: usize,
+    height: usize,
+    cells: Vec<Cell>,
+}
+
 impl BylSeed {
     pub fn golly_3_3_profile() -> Result<Self, RuleError> {
         let document: SeedDocument =
@@ -1563,6 +1703,82 @@ impl SdsrSeed {
     }
 }
 
+impl EvoloopSeed {
+    pub const SEED_SHA256: &'static str =
+        "ac4199ea8a86e7425b3effce40275f533be34dda782c5492e2ff1274ccc53fd0";
+
+    pub fn golly_3_3_profile() -> Result<Self, RuleError> {
+        let bytes = include_bytes!("../data/evoloop-golly-3.3/seed.json");
+        let actual = format!("{:x}", Sha256::digest(bytes));
+        if actual != Self::SEED_SHA256 {
+            return Err(RuleError::FixtureHashMismatch {
+                fixture: "Evoloop seed",
+                expected: Self::SEED_SHA256,
+                actual,
+            });
+        }
+        let document: SeedDocument =
+            serde_json::from_slice(bytes).map_err(|error| RuleError::Parse(error.to_string()))?;
+        if document.width != 17 || document.height != 17 || document.cells.len() != 149 {
+            return Err(RuleError::Parse("Evoloop seed invariants failed".into()));
+        }
+        let mut states = BTreeSet::new();
+        let mut positions = BTreeSet::new();
+        for cell in &document.cells {
+            State::try_from(cell.state).map_err(|error| RuleError::InvalidState(error.0))?;
+            if cell.state == 0
+                || cell.state >= EVOLOOP_STATE_COUNT
+                || cell.x >= document.width
+                || cell.y >= document.height
+                || !positions.insert((cell.x, cell.y))
+            {
+                return Err(RuleError::Parse("invalid Evoloop seed cell".into()));
+            }
+            states.insert(cell.state);
+        }
+        if states != BTreeSet::from([1, 2, 4, 5, 7]) {
+            return Err(RuleError::Parse(
+                "unexpected Evoloop seed state signature".into(),
+            ));
+        }
+        Ok(Self {
+            width: document.width,
+            height: document.height,
+            cells: document.cells,
+        })
+    }
+
+    pub fn active_cell_count(&self) -> usize {
+        self.cells.len()
+    }
+
+    pub fn dimensions(&self) -> (usize, usize) {
+        (self.width, self.height)
+    }
+
+    pub fn place_in(
+        &self,
+        width: usize,
+        height: usize,
+        origin_x: usize,
+        origin_y: usize,
+    ) -> Result<DenseGrid, GridError> {
+        let mut grid = DenseGrid::new(width, height)?;
+        for cell in &self.cells {
+            grid.set(
+                origin_x
+                    .checked_add(cell.x)
+                    .ok_or(GridError::InvalidDimensions)?,
+                origin_y
+                    .checked_add(cell.y)
+                    .ok_or(GridError::InvalidDimensions)?,
+                State::try_from(cell.state).expect("validated Evoloop seed"),
+            )?;
+        }
+        Ok(grid)
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Snapshot {
     pub active_cell_count: usize,
@@ -1579,6 +1795,18 @@ pub struct Bounds {
     pub min_y: usize,
     pub width: usize,
     pub height: usize,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ToroidalSnapshot {
+    pub active_cell_count: usize,
+    pub boundary: String,
+    pub cells: Vec<Cell>,
+    pub coordinate_basis: String,
+    pub generation: u64,
+    pub state_hash_sha256: String,
+    pub state_populations: BTreeMap<String, usize>,
+    pub world: [usize; 2],
 }
 
 impl Snapshot {
@@ -1694,6 +1922,78 @@ impl Snapshot {
     }
 }
 
+impl ToroidalSnapshot {
+    pub fn from_grid_for_rule<R: LocalRule + ?Sized>(
+        grid: &DenseGrid,
+        generation: u64,
+        rule: &R,
+    ) -> Self {
+        assert!(
+            grid.cells
+                .iter()
+                .all(|state| state.value() < rule.state_count()),
+            "grid contains a state outside the selected rule profile"
+        );
+        let mut cells = Vec::with_capacity(grid.active_cell_count());
+        for y in 0..grid.height {
+            for x in 0..grid.width {
+                let state = grid.cells[y * grid.width + x];
+                if state != State::QUIESCENT {
+                    cells.push(Cell {
+                        state: state.value(),
+                        x,
+                        y,
+                    });
+                }
+            }
+        }
+        let mut state_populations = BTreeMap::new();
+        for state in 1..rule.state_count() {
+            state_populations.insert(
+                state.to_string(),
+                cells.iter().filter(|cell| cell.state == state).count(),
+            );
+        }
+        let mut snapshot = Self {
+            active_cell_count: cells.len(),
+            boundary: "toroidal".into(),
+            cells,
+            coordinate_basis: TOROIDAL_COORDINATE_BASIS.into(),
+            generation,
+            state_hash_sha256: String::new(),
+            state_populations,
+            world: [grid.width, grid.height],
+        };
+        snapshot.state_hash_sha256 = snapshot.state_hash();
+        snapshot
+    }
+
+    pub fn canonical_state_json(&self) -> String {
+        let cells = self
+            .cells
+            .iter()
+            .map(|cell| {
+                format!(
+                    "    {{\n      \"state\": {},\n      \"x\": {},\n      \"y\": {}\n    }}",
+                    cell.state, cell.x, cell.y
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",\n");
+        format!(
+            "{{\n  \"boundary\": \"toroidal\",\n  \"cells\": [\n{}\n  ],\n  \"coordinate_basis\": \"{}\",\n  \"world\": [{}, {}]\n}}\n",
+            cells, self.coordinate_basis, self.world[0], self.world[1]
+        )
+    }
+
+    pub fn state_hash(&self) -> String {
+        format!(
+            "{:x}",
+            Sha256::digest(self.canonical_state_json().as_bytes())
+        )
+    }
+}
+
 pub fn verify_canonical(generation: u64, expected: &Snapshot) -> Result<(), String> {
     let rule = LangtonRule::canonical().map_err(|error| error.to_string())?;
     let seed = CanonicalSeed::canonical().map_err(|error| error.to_string())?;
@@ -1747,6 +2047,27 @@ pub fn verify_sdsr_golly_profile(generation: u64, expected: &Snapshot) -> Result
     } else {
         Err(format!(
             "SDSR Golly 3.3 profile mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
+            expected.state_hash_sha256,
+            actual.state_hash_sha256,
+            expected.active_cell_count,
+            actual.active_cell_count
+        ))
+    }
+}
+
+pub fn verify_evoloop_golly_profile(generation: u64, expected: &Snapshot) -> Result<(), String> {
+    let rule = EvoloopRule::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let seed = EvoloopSeed::golly_3_3_profile().map_err(|error| error.to_string())?;
+    let grid = seed
+        .place_in(768, 768, 256, 256)
+        .map_err(|error| error.to_string())?;
+    let chunked = ChunkedGrid::from_dense(&grid).run(&rule, generation);
+    let actual = Snapshot::from_grid_for_rule(&chunked.to_dense(), generation, &rule);
+    if actual == *expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "Evoloop Golly 3.3 profile mismatch at generation {generation}: expected hash {}, actual hash {}; expected {} cells, actual {}",
             expected.state_hash_sha256,
             actual.state_hash_sha256,
             expected.active_cell_count,

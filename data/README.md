@@ -40,6 +40,22 @@ license with the provenance notice in `../NOTICE.md`.
   generations `0`, `1`, `151`, `302`, `1,000`, and `2,000`; SHA-256
   `c7c636330afeb2d7a708b619234663bd327020196889a441898f0654b1f2c37b`.
   Every source trajectory was executed twice before freezing.
+- `evoloop-golly-3.3/lookup-base9-cnesw.bin`: the complete project-normalized
+  nine-state Evoloop direct function; SHA-256
+  `f21d18ea8f4fa622ec46e3ef201998df8075aa4961725fbaa361519da9f2f670`.
+  Its 59,049 entries agree across the same independent Java, maintained table,
+  and packaged Golly channels.
+- `evoloop-golly-3.3/seed.json`: the `17×17`, 149-cell 2-Evoloop species-13
+  executable-reference seed; SHA-256
+  `ac4199ea8a86e7425b3effce40275f533be34dda782c5492e2ff1274ccc53fd0`.
+- `evoloop-golly-3.3/oracles-golly-3.3.json`: quiescent-boundary snapshots at
+  generations `0`, `1`, `151`, `302`, `500`, `1,000`, and `2,000`; SHA-256
+  `8094faf3d0b4063a10f982cf66043ca6b27d9e95c0d571da533b2fd8f5c93e0f`.
+- `evoloop-golly-3.3/oracles-t200x200-golly-3.3.json`: absolute periodic-world
+  snapshots through generation `50,000`; SHA-256
+  `45dfb8aed9db3a11b8a44f5365d577abd20b31e87313c1a8f6a3f91a1554f8cf`.
+  The private generator queried all 40,000 coordinates from the pinned Golly
+  binary twice per milestone, avoiding lossy RLE position reconstruction.
 - `benchmark/identity-rule.json`: the project-authored stable-occupancy
   identity-control specification; SHA-256
   `e62113ac6654662762d93e3ab5ea38f5e7d6501a5477a2eff9df1187d4728736`.
@@ -58,11 +74,11 @@ paper's own Figure 3 at generation 1. The pinned Golly table instead matches
 all 28 printed Figure 3 configurations exactly. These sources are not silently
 merged into a supposedly canonical table.
 
-The SDSR fixture is likewise named as an executable-reference profile. The
-complete direct function is published instead of the raw Java, Golly rule,
-or package files, which remain private evidence. State `8` is the added
-structural-dissolution state. Exact trajectory agreement alone does not prove
-general self-repair or evolvability; those require separate interventions.
+The SDSR and Evoloop fixtures are likewise named executable-reference
+profiles. The complete direct function is published instead of the raw Java,
+Golly rule, or package files, which remain private evidence. State `8` is the
+added structural-dissolution state. Exact trajectory agreement alone does not
+prove general self-repair or evolvability; those require separate interventions.
 
 The public fixture set intentionally excludes raw papers, Golly package bytes,
 Golly rule/RLE source files, and rendered images.
