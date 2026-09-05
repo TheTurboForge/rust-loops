@@ -74,8 +74,11 @@ reusable double-buffered dense storage, an ordered-map sparse frontier, and an
 explicit rule-generic candidate using a sparse directory of dense `32×32`
 chunks. Each must yield the same rule-aware normalized state snapshot for a
 declared run. The chunked representation requires a stable quiescent
-background, uses active-edge candidate propagation, and remains manually
-selected while its second preregistered gate is evaluated.
+background and uses active-edge candidate propagation. Its second
+preregistered private gate retained it only for explicit manual selection on
+localized natural and centered-clustered workloads at `512²/2048²`. Uniform
+high-density controls favor dense storage, which remains the declared choice
+for that regime.
 
 Records identify the selected rule and fixtures, distinguish total evaluated
 cells from active-cell updates, and report logical capacity separately from
@@ -86,8 +89,9 @@ holds occupancy constant; it is not a scientific loop profile.
 
 The historical first chunked candidate was killed by aggregate timeouts. Its
 raw negative evidence remains valid and is not overwritten by the narrower
-per-process cross-rule experiment now in progress. No automatic representation
-dispatcher exists.
+per-process cross-rule result. No automatic representation dispatcher exists;
+one would require evidence beyond two rule profiles and a declared selection
+policy.
 
 ## Experiment Metadata
 

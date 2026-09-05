@@ -91,9 +91,10 @@ resolution.
   process-RSS deltas, update counts, and explicit counter/energy status; it
   makes no efficiency claim.
 - The first chunked candidate was killed under its preregistered aggregate
-  timeout gate. A second rule-generic candidate is now exposed explicitly for
-  a separately preregistered cross-rule experiment. It is not automatically
-  selected and has not yet passed its decision gate.
+  timeout gate. A second rule-generic candidate passed a separately
+  preregistered private cross-rule gate and is retained only as an explicit
+  manually selected option for localized `512²/2048²` workloads. Dense remains
+  the declared high-density choice; no automatic dispatcher exists.
 - The Langton generation-151 and Byl generation-25 reference trajectories are
   independently frozen and checked in the private research archive.
 - UI, GPU execution, parallelism, and additional rule families remain
@@ -131,12 +132,14 @@ RUST_LOOPS_GIT_REVISION="$(git rev-parse HEAD)" \
 
 Each line is one run record. All selected representation output hashes must
 match or the process fails. `both` retains dense/sparse compatibility; `all`
-adds the explicit chunked candidate. The identity workload is a stable-density
-storage/kernel control, not a loop result. The default scientific rule remains
-Langton for command compatibility. Wall-clock time is required; hardware
-counters and energy are reported only where the host and experiment provide
-them. Logical capacity, process RSS deltas, and `32×32` occupancy summaries are
-not allocator-exact ownership, physical memory traffic, or energy.
+adds the explicit chunked option. Use chunked only when locality is known; use
+dense for uniform high-density fields. The identity workload is a
+stable-density storage/kernel control, not a loop result. The default
+scientific rule remains Langton for command compatibility. Wall-clock time is
+required; hardware counters and energy are reported only where the host and
+experiment provide them. Logical capacity, process RSS deltas, and `32×32`
+occupancy summaries are not allocator-exact ownership, physical memory
+traffic, or energy.
 
 ## Epistemic Position
 
